@@ -1,0 +1,106 @@
+@import './color.less';
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-overflow-scrolling: touch;
+}
+
+html, body, #app {
+  width: 100vw;
+  height: 100vh;
+  max-width: 750px;
+  font-size: 100px;
+  box-sizing: border-box;
+  overflow: hidden;
+  user-select: none;
+  color: @text-color;
+  font-family: @text-family;
+}
+div, p, span, li, section{
+  font-size: .3rem;
+}
+
+ul, li, ol{
+  list-style: none;
+}
+
+a{
+  text-decoration: none;
+}
+mark{
+  color: @text-gray;
+  background-color: #fff;
+  font-size:0.32rem;
+}
+
+@media screen and (max-width: 414px){
+  html{
+    font-size: 64px;
+  }
+}
+@media  screen and (max-width: 375px){
+  html{
+    font-size: 58px;
+  }
+}
+
+@media screen and (max-width: 360px){
+  html{
+    font-size: 56px;
+  }
+}
+
+@media  screen and (max-width: 320px){
+  html{
+    font-size: 50px;
+  }
+}
+
+
+.flex{
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-flow: row nowrap;
+  flex-grow: 1;
+}
+.flex_empty{
+  flex:1;
+}
+.flex-flow__col{
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.flex-align__center{
+  align-items: center;
+}
+.flex-align__start{
+  align-items: flex-start;
+}
+.flex-justify__center{
+  justify-content: center;
+}
+.flex-justify__between{
+  justify-content: space-between;
+}
+.flex-justify__end{
+  justify-content: flex-end;
+}
+.align-self__end{
+  align-self: flex-end;
+}
+
+.avatar__phone:before{
+  content: '';
+  padding: .3rem;
+  background-image: url(../imgs/sprite.png);
+  background-position: 0% 90%;
+  background-size:10rem;
+  background-repeat: no-repeat;
+}
+
+.flex-empty-none{
+  visibility: hidden;
+}
