@@ -4,8 +4,6 @@
       v-model="visibleDialog"
       :title= 'title'
       :message= 'message'
-      @confirm = 'handleConfirm'
-      @cancel = 'handleCancel'
       :before-close="beforClose"
       :show-confirm-button= "canShowConfirmButton"
       :show-cancel-button= "canShowCancelButton"
@@ -50,6 +48,10 @@ export default {
     cancelButtonText: {
       type: String,
       default: '取消'
+    },
+    isShow:{
+      type: Boolean,
+      default: false
     }
   },
   name: '',
@@ -58,8 +60,6 @@ export default {
     return {}
   },
   methods: {
-    handleConfirm(){},
-    handleCancel(){},
     beforClose(action, done){
       this.$emit('hanleCloseDialog')
       done(false)

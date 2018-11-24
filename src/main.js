@@ -7,6 +7,7 @@ import '@/utils/vant'
 
 Vue.config.productionTip = false
 
+window.$router = router
 
 
 new Vue({

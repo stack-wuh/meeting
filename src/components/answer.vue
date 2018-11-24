@@ -22,15 +22,24 @@
   </section>
 </template>
 <script>
+import {mapActions} from 'vuex'
 export default {
   props: {},
   name: '',
   components: {},
   data(){
-    return {}
+    return {
+
+    }
   },
-  methods: {},
-  created(){}
+  methods: {
+    ...mapActions({
+  
+    })
+  },
+  created(){
+
+  }
 }
 </script>
 <style lang="less" scoped>

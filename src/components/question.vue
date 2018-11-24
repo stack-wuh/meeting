@@ -39,6 +39,7 @@
   </section>
 </template>
 <script>
+import {mapActions} from 'vuex'
 export default {
   props: {},
   name: '',
@@ -52,6 +53,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      'getAnswerList': 'getAnswerList'
+    }),
     handleClickSubmit(item, index){
       this.visibleDialog = true
       this.temp__index = index
@@ -66,7 +70,9 @@ export default {
       console.log('is cancel')
     },
   },
-  created(){}
+  created(){
+    this.getAnswerList()
+  }
 }
 </script>
 <style lang="less" scoped>

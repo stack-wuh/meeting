@@ -13,14 +13,14 @@ module.exports = {
     port: '10040',
     https: false,
     proxy: {
-      '/my_api': {
-        target: ' https://api.spacexdata.com/',
+      '/meeting': {
+        target: 'http://192.168.10.117:80/meeting/',
         changeOrigin: true,
         pathRewrite: {
-          '^/my_api': ''
+          '^/meeting': ''
         },
       }
-    }
+    },
   },
   productionSourceMap: false,
 

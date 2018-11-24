@@ -4,32 +4,26 @@
       <van-checkbox-group v-model="result" :max="3">
         <van-cell-group>
           <van-cell
-            v-for="(item, index) in 20"
+            v-for="(item, index) in list"
             :key="index"
-            :title="`复选框${item}`"
+            :title="`${item.name}`"
             clickable
-            @click="toggle(index)"
             >
-              <van-checkbox :name="item" ref="checkboxs" />
+              <van-checkbox :disabled="canVote" :name="item" ref="checkboxs" />
           </van-cell>
         </van-cell-group>
       </van-checkbox-group>
     </section>
-
     <section class="btn-area">
-      <button @click="handleSubmit" class="btn__submit" type="button" name="button">投票</button>
+      <button @click="handleSubmit" :class="[canVote == false ? 'btn__submit' : 'btn__submit btn__disabled' ]" type="button" name="button">投票</button>
     </section>
-
-    <my-dialog  @hanleCloseDialog="hanleCloseDialog" :visibleDialog="isShowDialog" title="提示">
-      <section v-if="result.length < 3" class="flex flex-align__center flex-justify__center" slot="text">请选择三个部门</section>
-      <section v-if="result.length === 3" class="imgs-box" slot="text">
-        <img src="../assets/imgs/icon-support.png" alt="logo" style="width: 100%; height: 100%; margin: 0 auto;">
-      </section>
-    </my-dialog>
   </section>
 </template>
 <script>
 import MyDialog from '@/components/common/dialog'
+import {mapActions} from 'vuex'
+
+const LocalStorage = window.localStorage
 export default {
   props: {},
   name: '',
@@ -39,21 +33,72 @@ export default {
   data(){
     return {
       result: [],
-      isShowDialog: false
+      isShowDialog: false,
+
+      list: [],
+      Socket: null,
+      canVote: LocalStorage.getItem('canVote') || false,
+      remind: '请选择三个部门后投票'
     }
   },
   methods: {
-    toggle(index){
-      console.log(index, this.result)
-    },
-    hanleCloseDialog(){
-      this.isShowDialog = false
-    },
+    ...mapActions({
+      'getVoteInfo': 'getVoteInfo',
+      'postVoteList': 'postVoteList'
+    }),
     handleSubmit(){
-      this.isShowDialog = true
+      let ids = this.result && this.result.map(item => item.id)
+      let data = {
+        message: ids
+      }
+      let bg_1 = require('@/assets/imgs/icon-support.png')
+
+      const canVoteing = () => {
+        this.$dialog.confirm({
+          title: '提示',
+          message: `<img src="${bg_1}" alt="logo" style="width: 100%; height: 100%; margin: 0 auto;" />`
+        })
+        .then(() => {
+          this.Socket.send(JSON.stringify(data))
+          LocalStorage.setItem('canVote', true)
+          this.result = []
+          setTimeout(() => {
+            this.Socket.close()
+            this.$router.go(-1)
+          }, 1000)
+        })
+        .catch(() => {
+          this.result = []
+          setTimeout(() => {
+            this.$router.go(-1)
+          }, 1000)
+        })
+      }
+      const unCanVoteing = () => {
+        this.$dialog.confirm({
+          title: '提示',
+          message: '请勿重复投票',
+          showConfirmButton: false,
+        }).catch(() => {
+          this.handleCloseDialog()
+        })
+      }
+      let actions = new Map([
+        [{canVote: false, result: 3}, canVoteing],
+        [{canVote: true, result: 0}, unCanVoteing]
+      ])
+      let action = [...actions].filter(([key, value]) => (key.canVote === this.canVote && key.result === ids.length))
+      action.forEach(([key, value]) => {
+        value.call(this)
+      })
     }
   },
-  created(){}
+  created(){
+    this.Socket = new WebSocket('ws://192.168.10.122:8082/meeting/voteWebsocket/2')
+    this.getVoteInfo().then(res => {
+      this.list = res.data
+    })
+  },
 }
 </script>
 <style lang="less" scoped>
@@ -78,6 +123,10 @@ export default {
         background-color: @base-blue;
         color: #fff;
         border: none;
+      }
+      .btn__disabled{
+        background-color: #eee;
+        color: #999;
       }
     }
   }

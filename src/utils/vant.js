@@ -39,4 +39,6 @@ Vue.prototype.$http = $http
 Vue.prototype.$toast = _toast
 Vue.prototype.$dialog = Dialog
 window.$toast = Toast
-window.rootPath = '/my_api'
+
+window.rootPath = '/meeting'
+window.WebScoket = 'ws://192.168.10.122:8082/'

@@ -17,31 +17,75 @@ axios.interceptors.response.use(response => {
 })
 
 const checkStatus = response => {
-  switch (response.status) {
-    case 200:
-      return _toast({
-        type: 2,
-        msg: '加载成功'
+  if (response.status === 200 && response.data.status === 10) {
+    _toast({
+      type: 3,
+      msg: response.data.msg
+    })
+    setTimeout(() => {
+      window.$router.push({
+        path: '/login'
       })
-    case 400:
-      return _toast({
+    }, 1000)
+    return
+  }
+  const map = new Map([
+    [{
+      resStatus: 200,
+      msgStatus: 0
+    }, {
+      type: 2,
+      msg: response.data.msg
+    }],
+    [{
+        resStatus: 200,
+        msgStatus: 1
+      },
+      {
+        type: 3,
+        msg: response.data.msg
+      }
+    ],
+    [{
+        resStatus: 300,
+      },
+      {
+        type: 3,
+        msg: '300错误'
+      }
+    ],
+    [{
+        resStatus: 400,
+        msgStatus: 'undefined'
+      },
+      {
         type: 3,
         msg: '400错误'
-      })
-    case 404:
-      return _toast({
+      }
+    ],
+    [{
+        resStatus: 404,
+        msgStatus: 'undefined'
+      },
+      {
         type: 3,
-        msg: '404错误'
-      })
-    case 500:
-      return _toast({
+        msg: '400错误'
+      }
+    ],
+    [{
+        resStatus: 500
+      },
+      {
         type: 3,
         msg: '500错误'
-      })
-    default:
-      return response
-  }
+      }
+    ]
+  ])
+  let result = [...map].filter(([key]) => (key.resStatus == response.status && key.msgStatus == response.data.status))
+  result.forEach(item => _toast(item[1]))
+  return response.data
 }
+
 
 export default {
   post({
@@ -49,23 +93,20 @@ export default {
     data,
   }) {
     return axios({
-      methods: 'post',
-      baseURL: window.rootPath,
+      method: 'post',
+      // baseURL: window.rootPath,
       url,
       data: qs.stringify(data),
       timeout: 10000,
+      crossDomain: true,
       headers: {
         'X-Requested-With': 'XMLHttpRequest',
         'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
       }
     }).then(res => {
-      checkStatus(res)
-      return res
+      return checkStatus(res)
     }).catch(err => {
-      _toast({
-        type: 3,
-        msg: '网络错误,请重试!'
-      })
+      return Promise.reject(err)
     })
   }
 }

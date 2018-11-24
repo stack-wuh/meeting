@@ -56,6 +56,11 @@ export default new Router({
       path: '/answer',
       component: () =>
         import('@/components/answer')
+    },
+    {
+      path: '/quess',
+      component: () =>
+        import('@/components/marquee')
     }
   ]
 })

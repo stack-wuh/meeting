@@ -1,4 +1,7 @@
 import $http from '@/utils/axios'
+import {
+  _catch
+} from '@/utils/global'
 
 export const getDateInfo = ({
   data = {}
@@ -6,3 +9,32 @@ export const getDateInfo = ({
   url: '/v2/launches',
   data
 })
+
+export const getUserInfo = () => $http.post({
+  url: window.rootPath + '/userPo/init.do'
+}).catch(err => _catch(err))
+
+export const getMeetting = () => $http.post({
+  url: window.rootPath + '/meetingMaterial/init.do'
+}).catch(err => _catch(err))
+
+export const getVoteList = () => $http.post({
+  url: window.rootPath + '/vote/init.do'
+}).catch(err => _catch(err))
+
+export const postVoteListInfo = ({
+  data
+}) => $http.post({
+  url: window.rootPath + '/vote/voting.do',
+  data: {
+    data
+  }
+}).catch(err => _catch(err))
+
+export const getGradeList = () => $http.post({
+  url: window.rootPath + '/grade/init.do',
+}).catch(err => _catch(err))
+
+export const _getSeating = () => $http.post({
+  url: '/index/seatManage.do'
+}).catch(err => _catch(err))

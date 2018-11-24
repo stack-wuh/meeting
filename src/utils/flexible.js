@@ -13,7 +13,7 @@
     var width = docEl.getBoundingClientRect().width;
     if (!maxWidth) {
       maxWidth = 540;
-    };
+    }
     if (width > maxWidth) { // 淘宝做法：限制在540的屏幕下，这样100%就跟10rem不一样了
       width = maxWidth;
     }

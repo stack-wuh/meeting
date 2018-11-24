@@ -6,52 +6,15 @@
       </header>
       <section class="content flex flex-flow__col">
         <h3 class="content__title">2018年东风LEAR年会</h3>
-        <article v-if="path === '/meettings'" class="content__info">this is content for test one 111__,
-          this is content for test one 111__,
-          this is content for test one 111__,
-          this is content for test one 111__,
-          this is content for test one 111__,
-            this is content for test one 111__,
-            this is content for test one 111__,
-            this is content for test one 111__,
-            this is content for test one 111__,
-              this is content for test one 111__,
-              this is content for test one 111__,
-              this is content for test one 111__,
-              this is content for test one 111__,
-                this is content for test one 111__,
-                this is content for test one 111__,
-                this is content for test one 111__,
-                this is content for test one 111__,
-                  this is content for test one 111__,
-                  this is content for test one 111__,
-                  this is content for test one 111__,
-                  this is content for test one 111__,
-                    this is content for test one 111__,
-                    this is content for test one 111__,
-                    this is content for test one 111__,
-                    this is content for test one 111__,
-                      this is content for test one 111__,
-                      this is content for test one 111__,
-                      this is content for test one 111__,
-                      this is content for test one 111__,
-                        this is content for test one 111__,
-                        this is content for test one 111__,
-                        this is content for test one 111__,
-                        this is content for test one 111__,
-                          this is content for test one 111__,
-                          this is content for test one 111__,
-                          this is content for test one 111__,
-                          this is content for test one 111__,
-                            this is content for test one 111__,
-                            this is content for test one 111__,
-                            this is content for test one 111__,</article>
-        <my-button :disabled="true" @handleClickBtn="handleDownLoad" v-if="path === '/meettings'" text="下载会议资料" type="danger"></my-button>
+        <article v-if="path === '/meettings'" class="content__info content__article" v-html="info.material" ></article>
+        <my-button :disabled="false" @handleClickBtn="handleDownLoad" v-if="path === '/meettings'" text="下载会议资料" type="danger"></my-button>
       </section>
   </section>
 </template>
 <script>
 import MyButton from '@/components/common/button'
+
+import {mapActions} from 'vuex'
 export default {
   props: {},
   name: '',
@@ -61,7 +24,9 @@ export default {
   data(){
     return {
       isDisabled: true,
-      count: 0
+      count: 0,
+
+      info: {}
     }
   },
   computed: {
@@ -70,13 +35,30 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      'getMeettingInfo': 'getMeettingInfo',
+      'getSeating': 'getSeating'
+    }),
     handleDownLoad(){
-      this.count ++
-      console.log(this.count)
+      location.href = window.rootPath + this.info.materialUrl
+    },
+    fetchMeetting(){
+      this.getMeettingInfo().then(res => {
+        this.info = res.data
+      })
+    },
+    fetchSetting(){
+      this.getSeating().then(res => {
+        this.info = res.data
+      })
     }
   },
   created(){
-
+    let actions = {
+      '/meettings': this.fetchMeetting,
+      '/seating': this.fetchSetting
+    }
+    actions[Object.keys(actions).find(item => this.$route.path === item)].call(this)
   }
 }
 </script>
@@ -100,8 +82,10 @@ export default {
 
    .content{
      height: inherit;
-     width: calc(100% - .6rem);
+     wdith: inherit;
+     // width: calc(100% - .6rem);
      margin-left: .3rem;
+     margin-right: .3rem;
      background-color: #fff;
      border-top-left-radius: 4px;
      border-top-right-radius: 4px;

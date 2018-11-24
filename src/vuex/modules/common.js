@@ -1,5 +1,10 @@
 import {
-  getDateInfo
+  getUserInfo,
+  getMeetting,
+  getVoteList,
+  postVoteListInfo,
+  getGradeList,
+  _getSeating
 }
 from '@/api/common.api'
 
@@ -12,16 +17,88 @@ const mutations = {
 }
 
 const actions = {
-  async getAdminDate({
-    commit
+  /**
+   * [getUser 个人中心 -- 获取用户详情]
+   * @return {Promise} [description]
+   */
+  async getUser() {
+    try {
+      const response = await getUserInfo()
+
+      return response
+    } catch (err) {
+      throw new Error(err)
+    }
+  },
+
+  /**
+   * [getMeettingInfo 会议资料 -- 获取会议资料详情]
+   * @return {Promise} [description]
+   */
+  async getMeettingInfo() {
+    try {
+      const response = await getMeetting()
+
+      return response
+    } catch (err) {
+      throw new Error(err)
+    }
+  },
+
+  /**
+   * [getVoteInfo 部门投票 -- 获取部门列表]
+   * @return {Promise} [description]
+   */
+  async getVoteInfo() {
+    try {
+      const response = await getVoteList()
+
+      return response
+    } catch (err) {
+      throw new Error(err)
+    }
+  },
+
+  /**
+   * [postVoteList 部门投票]
+   * @param  {[type]}  context [description]
+   * @param  {[type]}  data    [description]
+   * @return {Promise}         [description]
+   */
+  async postVoteList(context, {
+    data
   }) {
     try {
-      const res = await getDateInfo({
-        data: 1
+      const response = await postVoteListInfo({
+        data
       })
-      console.log(res, 'this is datainfo')
+
+      return response
     } catch (err) {
-      console.log(err)
+      throw new Error(err)
+    }
+  },
+
+  /**
+   * [getAnswerList 获取打分的列表]
+   * @return {Promise} [description]
+   */
+  async getAnswerList() {
+    try {
+      const response = await getGradeList()
+
+      return response
+    } catch (err) {
+      throw new Error(err)
+    }
+  },
+
+  async getSeating() {
+    try {
+      const response = await _getSeating()
+      return response
+    } catch (err) {
+      throw new Error(err)
     }
   }
 }
