@@ -22,12 +22,12 @@ const checkStatus = response => {
       type: 3,
       msg: response.data.msg
     })
-    setTimeout(() => {
-      window.$router.push({
-        path: '/login'
-      })
-    }, 1000)
-    return
+    // setTimeout(() => {
+    //   window.$router.push({
+    //     path: '/login'
+    //   })
+    // }, 1000)
+    // return
   }
   const map = new Map([
     [{

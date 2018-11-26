@@ -4,7 +4,9 @@ import {
   getVoteList,
   postVoteListInfo,
   getGradeList,
-  _getSeating
+  _getSeating,
+  getGradeInfo,
+  download
 }
 from '@/api/common.api'
 
@@ -93,9 +95,41 @@ const actions = {
     }
   },
 
+  /**
+   * [getSeating 获取座位列表信息]
+   * @return {Promise} [description]
+   */
   async getSeating() {
     try {
       const response = await _getSeating()
+      return response
+    } catch (err) {
+      throw new Error(err)
+    }
+  },
+
+  /**
+   * [getGradeInfo 获取打分列表]
+   * @return {Promise} [description]
+   */
+  async getGradeInfo() {
+    try {
+      const response = await getGradeInfo()
+      return response
+    } catch (err) {
+      throw new Error(err)
+    }
+  },
+
+  async handleDownload(context, {
+    materialUrl
+  }) {
+    try {
+
+      const response = await download({
+        materialUrl
+      })
+      location.href = response.data
       return response
     } catch (err) {
       throw new Error(err)

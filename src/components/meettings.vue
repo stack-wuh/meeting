@@ -5,9 +5,9 @@
         <p>{{path === '/meettings' ? 'CONEERENCE INFORMATION' : 'SEATING PLAN' }}</p>
       </header>
       <section class="content flex flex-flow__col">
-        <h3 class="content__title">2018年东风LEAR年会</h3>
+        <h3 v-if="path === '/meettings'" class="content__title">2018年东风LEAR年会</h3>
         <article v-if="path === '/meettings'" class="content__info content__article" v-html="info.material" ></article>
-        <my-button :disabled="false" @handleClickBtn="handleDownLoad" v-if="path === '/meettings'" text="下载会议资料" type="danger"></my-button>
+        <my-button :disabled="false" @handleClickBtn="DownLoad" v-if="path === '/meettings'" text="下载会议资料" type="danger"></my-button>
       </section>
   </section>
 </template>
@@ -37,10 +37,11 @@ export default {
   methods: {
     ...mapActions({
       'getMeettingInfo': 'getMeettingInfo',
-      'getSeating': 'getSeating'
+      'getSeating': 'getSeating',
+      'handleDownload': 'handleDownload'
     }),
-    handleDownLoad(){
-      location.href = window.rootPath + this.info.materialUrl
+    DownLoad(){
+      this.handleDownload({materialUrl: this.info.materialUrl})
     },
     fetchMeetting(){
       this.getMeettingInfo().then(res => {

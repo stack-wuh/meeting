@@ -36,5 +36,18 @@ export const getGradeList = () => $http.post({
 }).catch(err => _catch(err))
 
 export const _getSeating = () => $http.post({
-  url: '/index/seatManage.do'
+  url: window.rootPath + '/index/seatManage.do'
+}).catch(err => _catch(err))
+
+export const getGradeInfo = () => $http.post({
+  url: window.rootPath + '/grade/init.do'
+}).catch(err => _catch(err))
+
+export const download = ({
+  materialUrl
+}) => $http.post({
+  url: window.rootPath + '/meetingMaterial/downLoad.do',
+  data: {
+    materialUrl
+  }
 }).catch(err => _catch(err))

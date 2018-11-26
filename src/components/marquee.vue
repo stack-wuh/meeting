@@ -1,7 +1,10 @@
 <template>
   <section class="wrapper">
     <section ref="print" id="print" class="canvas-box">
-      <canvas id="canvas"></canvas>
+      <canvas @click="handleClick" id="canvas"></canvas>
+    </section>
+    <section ref='inputBox' id="input-box" class="input-box">
+      <input class="input" type="text" name="text" value="">
     </section>
   </section>
 </template>
@@ -102,6 +105,9 @@ export default {
     }
   },
   methods: {
+    handleClick(){
+      console.log('is clicked')
+    },
     canvasBarrage(canvas, data){
       if (!canvas || !data || !data.length) {
         return;
@@ -197,18 +203,22 @@ export default {
     translateScreen(){
       let width = document.documentElement.clientWidth,
           height = document.documentElement.clientHeight,
-          elem = this.$refs.print
+          elem = this.$refs.print,
+          inputBox = this.$refs.inputBox
       if(width < height){
-        elem.style.width = height + 'px'
-        elem.style.height = width + 'px'
+        elem.style.width = height + 50 + 'px'
+        elem.style.height = width - 50 + 'px'
         elem.style.top = ((height - width ) / 2) + 'px'
         elem.style.left = (0 - (height - width) / 2) + 'px'
+        elem.style.zIndex = '100'
+        inputBox.style.width = '40px'
+        inputBox.style.height = '100vh'
       }
       var evt = "onorientationchange" in window ? "orientationchange" : "resize"
       window.addEventListener(evt, function(){
         setTimeout(() =>{
-          let width = document.documentElement.clientWidth,
-              height = document.documentElement.clientHeight,
+          let width = document.documentElement.clientWidth - 50,
+              height = document.documentElement.clientHeight - 50,
               elem = this.$refs.print
               this.$toast(width, height)
           if(width > height){
@@ -218,6 +228,7 @@ export default {
             elem.style.left = '0'
             elem.style.transform = 'none'
             elem.style.transformOrigin = '50%'
+            elem.style.zIndex = '100'
           }else {
             elem.style.width = height + 'px'
             elem.style.height = width + 'px'
@@ -225,21 +236,21 @@ export default {
             elem.style.left = (0 - (height - width) / 2) + 'px'
             elem.style.transform = 'rotate(90deg)'
             elem.style.transformOrigin = '50%'
+            elem.style.zIndex = '100'
+            inputBox.style.width = 40 + 'px'
+            inputBox.style.height = '100vh'
           }
         }, 300)
       }, true)
     }
   },
+
   created(){
     setTimeout(() => {
       this.canvasBarrage('#canvas', this.VirData)
-    }, 1000)
-  },
-  mounted(){
-    setTimeout(() => {
       this.translateScreen()
     }, 1000)
-  }
+  },
 }
 </script>
 <style lang="less" scoped>
@@ -250,11 +261,14 @@ export default {
   .canvas-box{
     width: inherit;
     height: inherit;
+    z-index: 100;
     canvas{
       width: inherit;
       height: inherit;
+      z-index: 100;
     }
   }
+
 }
 @media screen and (orientation: portrait){ // 竖屏
   body{
@@ -270,7 +284,7 @@ export default {
       width: 100vh;
       height: 100vh;
       overflow: hidden;
-      // transform-origin: 50vw 28vh;
+      z-index: 100;
     }
   }
 }
@@ -280,6 +294,12 @@ export default {
     #print{
       -webkit-transform: rotate(0deg);
       -moz-transform: rotate(0deg);
+      -ms-transform: rotate(0deg);
+      transform: rotate(0deg);
+    }
+    #input-box{
+      -webkit-transform: rotate(0deg);
+      -moz-transforn: rotate(0deg);
       -ms-transform: rotate(0deg);
       transform: rotate(0deg);
     }

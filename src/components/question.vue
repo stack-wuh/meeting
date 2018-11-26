@@ -49,12 +49,13 @@ export default {
       visibleDialog : false,
       score: '',
 
+      list: [], // 保存打分列表
       temp__index: -1, // 临时保存单击议题的数组下标
     }
   },
   methods: {
     ...mapActions({
-      'getAnswerList': 'getAnswerList'
+      'getGradeInfo': 'getGradeInfo'
     }),
     handleClickSubmit(item, index){
       this.visibleDialog = true
@@ -71,7 +72,9 @@ export default {
     },
   },
   created(){
-    this.getAnswerList()
+    this.getGradeInfo().then(res =>{
+      
+    })
   }
 }
 </script>

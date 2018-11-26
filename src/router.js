@@ -61,6 +61,11 @@ export default new Router({
       path: '/quess',
       component: () =>
         import('@/components/marquee')
+    },
+    {
+      path: '/barrage',
+      component: () =>
+        import('@/components/barrage')
     }
   ]
 })

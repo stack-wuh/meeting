@@ -48,8 +48,9 @@ export default {
     }),
     handleSubmit(){
       let ids = this.result && this.result.map(item => item.id)
-      let data = {
-        message: ids
+      let message = {
+        depId: ids,
+        voteId: 1
       }
       let bg_1 = require('@/assets/imgs/icon-support.png')
 
