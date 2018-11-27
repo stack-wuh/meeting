@@ -120,16 +120,16 @@ export default {
                 userId: 15
               }
               that.Socket.send(JSON.stringify(message))
-              barage.shoot(text);
               elem.value = ' '
           };
           let textList = ['热场弹幕', '新年快乐', '吉祥如意', '心想事成', '热场弹幕', '热场弹幕', '新年快乐', '吉祥如意', '心想事成', '热场弹幕', '新年快乐', '吉祥如意', '心想事成', ];
           that.Socket.onmessage = function (e){
             textList.push(e.data)
-            textList.forEach((item, index) => {
-              barage.shoot(item)
-              textList.splice(index, 1)
-            })
+            for(var i = 0; i < textList.length; i ++){
+              barage.shoot(textList[i])
+              textList.shift()
+              i--
+            }
           }
       })(this)
     })
