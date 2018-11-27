@@ -9,7 +9,7 @@
         </van-cell-group>
         <van-cell-group class="my-form__item">
             <van-field v-model="identify" center label="验证码">
-              <van-button @click="handleIdentifyCode({phone})" slot="button" size="small" type="primary" >发送验证码</van-button>
+              <van-button :disabled="isReload" @click="handleClickSconed" slot="button" size="small" type="primary" >{{remind}}</van-button>
             </van-field>
         </van-cell-group>
     </section>
@@ -22,6 +22,7 @@
 <script>
 import logo from '@/assets/imgs/logo.png'
 import {mapActions} from 'vuex'
+import {validPhone} from '@/utils/vaild'
 export default{
   props: {},
   name: '',
@@ -30,7 +31,10 @@ export default{
     return {
       phone: '',
       identify: '',
-      sessionId: ''
+      sessionId: '',
+
+      remind: '发送验证码',
+      isReload: false
     }
   },
   methods: {
@@ -38,6 +42,17 @@ export default{
       'handleIdentifyCode': 'handleIdentifyCode',
       'handleSignIn': 'handleSignIn'
     }),
+    handleClickSconed(){
+     let count = 60, timer = null
+     if(!validPhone(this.phone)) return
+     timer = setInterval(() => {
+        count --
+        this.remind = `${count}s后再次发送`
+        this.isReload = true
+      }, 1000)
+      this.isReload = false
+      this.handleIdentifyCode({phone: this.phone})
+    }
   },
   created(){
 

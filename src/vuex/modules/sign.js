@@ -4,9 +4,6 @@ import {
   getIndexInfo
 } from '@/api/signin.api.js'
 
-import {
-  validPhone
-} from '@/utils/vaild'
 
 const state = {
 
@@ -54,7 +51,6 @@ const actions = {
     phone
   }) {
     try {
-      if (!validPhone(phone)) return
       const response = await getIdentifyCode({
         phone
       })
