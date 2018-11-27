@@ -20,8 +20,8 @@
       class="my-notice-bar">
     </van-notice-bar>
 
-    <section v-if="question" class="img-box">
-      <img @click="jumpToOther({path: '/answer'})" :src="question.picture || defaultBg" alt="">
+    <section @click="jumpToOther({path: '/answer'})" v-if="question" class="img-box">
+      <img  :src="question.picture || defaultBg" alt="">
     </section>
 
     <section class="card-list">

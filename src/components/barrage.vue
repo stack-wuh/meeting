@@ -16,7 +16,9 @@ export default {
   name: '',
   components: {},
   data(){
-    return {}
+    return {
+      Socket: null,
+    }
   },
   methods: {
     translateScreen(){
@@ -37,7 +39,7 @@ export default {
               height = document.documentElement.clientHeight,
               elem = this.$refs.print
           if(width > height){ // 横屏
-            elem.style.width = width + 'px'
+            elem.style.width = width - 16 + 'px'
             elem.style.height = height + 'px'
             elem.style.top = '0'
             elem.style.left = '0'
@@ -45,7 +47,7 @@ export default {
             elem.style.transformOrigin = '50%'
             elem.style.zIndex = '100'
           }else { // 竖屏
-            elem.style.width = height + 'px'
+            elem.style.width = height - 16 + 'px'
             elem.style.height = width + 'px'
             elem.style.top = ((height - width ) / 2) + 'px'
             elem.style.left = (0 - (height - width) / 2) + 'px'
@@ -58,8 +60,10 @@ export default {
     },
   },
   created(){
+    this.Socket = new WebSocket(window.socketPath + 'meeting/websocket')
     setTimeout(() => {
-      (function () {
+
+      (function (that) {
           class Barrage {
               constructor(id) {
                   this.domList = [];
@@ -111,22 +115,30 @@ export default {
           document.querySelector('#send').onclick = () => {
               let text = document.querySelector('#text').value;
               let elem = document.querySelector('#text')
+              let message = {
+                message: text,
+                userId: 15
+              }
+              that.Socket.send(JSON.stringify(message))
               barage.shoot(text);
               elem.value = ' '
-              console.log(elem)
           };
-
-          const textList = ['弹幕', '666', '233333333', 'javascript', 'html', 'css', '前端框架', 'Vue', 'React', 'Angular',
-              '测试弹幕效果'
-          ];
-          textList.forEach((s) => {
-              barage.shoot(s);
-          })
-      })()
+          let textList = ['热场弹幕', '新年快乐', '吉祥如意', '心想事成', '热场弹幕', '热场弹幕', '新年快乐', '吉祥如意', '心想事成', '热场弹幕', '新年快乐', '吉祥如意', '心想事成', ];
+          that.Socket.onmessage = function (e){
+            textList.push(e.data)
+            textList.forEach((item, index) => {
+              barage.shoot(item)
+              textList.splice(index, 1)
+            })
+          }
+      })(this)
     })
   },
   mounted(){
     this.translateScreen()
+  },
+  distoryed(){
+    this.Socket.close()
   }
 }
 </script>

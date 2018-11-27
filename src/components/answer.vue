@@ -1,44 +1,120 @@
 <template>
   <section class="wrapper">
     <header class="header flex flex-justify__center">
-      <strong>5/12</strong>
+      <strong>{{info.sequenceNum || 0}}/{{info.total || 0}}</strong>
     </header>
-
     <section class="list-box">
       <section class="head flex flex-justify__end">
           <img class="head__star" src="../assets/imgs/icon-star.png" alt="star">
-          <span class="head__num flex-self__end">24人</span>
+          <span class="head__num flex-self__end">{{info.count || 0}}人</span>
       </section>
-      <section class="list">
-        <h4 class="list__title">这里是标题这里是标题这里是标题这里是标题这里是标题这里是标题这里是标题</h4>
+      <section v-if="info.status === 0" class="list">
+        <h4 class="list__title">{{info.content || '标题'}}</h4>
         <ul class="list__item">
-            <li class="item">A. 这里是选项A,这里是选项A,这里是选项A，这里是选项A</li>
-            <li class="item">B. 这里是选项B</li>
-            <li class="item">C. 这里是选项C</li>
-            <li class="item">D. 这里是选项D</li>
+            <li @click="handleSubmit(info.optionA, 0)" :class="[isChecked == 0 ? 'item item__active' : 'item', isSuccess == 0 ? 'item item__success' : 'item']">A. {{info.optionA}}</li>
+            <li @click="handleSubmit(info.optionB, 1)" :class="[isChecked == 1 ? 'item item__active' : 'item', isSuccess == 1 ? 'item item__success' : 'item']">B. {{info.optionB}}</li>
+            <li @click="handleSubmit(info.optionC, 2)" :class="[isChecked == 2 ? 'item item__active' : 'item', isSuccess == 2 ? 'item item__success' : 'item']">C. {{info.optionC}}</li>
+            <li @click="handleSubmit(info.optionD, 3)" :class="[isChecked == 3 ? 'item item__active' : 'item', isSuccess == 3 ? 'item item__success' : 'item']">D. {{info.optionD}}</li>
+        </ul>
+      </section>
+      <section v-if="info.status === 1" class="list">
+        <h4 class="list__title">{{info.content || '标题'}}</h4>
+        <ul class="list__item">
+            <li :class="[isSuccess == 0 ? 'item item__success' : 'item']">A. {{info.optionA}}</li>
+            <li :class="[isSuccess == 1 ? 'item item__success' : 'item']">B. {{info.optionB}}</li>
+            <li :class="[isSuccess == 2 ? 'item item__success' : 'item']">C. {{info.optionC}}</li>
+            <li :class="[isSuccess == 3 ? 'item item__success' : 'item']">D. {{info.optionD}}</li>
         </ul>
       </section>
     </section>
-  </section>
+
+    <my-dialog
+      :visibleDialog="visibleDialog"
+      title=""
+      :canShowConfirmButton="false"
+      :canShowCancelButton="false"
+      confirmButtonText="继续闯关"
+    >
+      {{info.count}} -- {{info.sequenceNum}}
+      <div class="my-dialog-wrapper" slot="text">
+        <div class="my-dialog-img">
+          <img :src="successImg" alt="logo" style="width: 100%; height: 100%;">
+        </div>
+        <p class="dialog__sub">{{canGo ? '恭喜你' : '很遗憾'}}</p>
+        <p v-if="info.sequenceNum !== info.total" class="dialog__title">{{canGo ? '回答正确' : '闯关失败'}}</p>
+        <p v-if="info.sequenceNum == info.total" class="dialog__title">{{canGo ? '闯关成功' : '闯关失败'}}</p>
+        <van-button v-if="info.sequenceNum == info.total" @click="jump2Other" type="primary" class="btn__submit">回到首页</van-button>
+        <van-button v-if="info.sequenceNum !== info.total" @click="visibleDialog = false" type="primary" class="btn__submit">{{canGo ? '继续闯关' : '继续观战'}}</van-button>
+      </div>
+    </my-dialog>
+</section>
 </template>
 <script>
 import {mapActions} from 'vuex'
+import MyDialog from '@/components/common/dialog'
 export default {
   props: {},
   name: '',
-  components: {},
+  components: {
+    MyDialog
+  },
   data(){
     return {
+      visibleDialog: false, // 是否展示 dialog对话框
+      Socket: null, // Socket
 
+      successImg: require('@/assets/imgs/w.jpg'),
+      errorImg: require('@/assets/imgs/32.jpg'),
+      info: {},
+
+      isChecked: -1, // 选中选项时候的状态
+      isSuccess: -1, //正确答案的状态
+      canGo: false, // 是否答题成功
     }
   },
   methods: {
     ...mapActions({
-  
-    })
+      'addSuccess': 'addSuccess'
+    }),
+    handleSubmit(option, index){
+      this.isChecked = index
+      let successIndex = this.info.options.indexOf(this.info.rightAnswer)
+      if(index !== successIndex){
+        this.Socket.send('wrong')
+      }
+      setTimeout(() => {
+        this.isChecked = -1
+        this.isSuccess = successIndex
+        this.visibleDialog = true
+        this.canGo = successIndex === index ? true : false
+      }, 1000)
+    },
+    jump2Other(){
+      this.visibleDialog = false
+      let data = {
+        userId: 1,
+        meetingId: this.info.meetingId
+      }
+      if(this.canGo){
+        this.addSuccess(data)
+      }
+      setTimeout(() => {
+        this.$router.push({path: '/index'})
+      }, 1000)
+    }
   },
   created(){
-
+    let that = this
+    this.Socket = new WebSocket(window.socketPath + 'meeting/passWebsocket/14/0')
+    this.Socket.onmessage = function(e){
+      let data = JSON.parse(e.data)
+      let options = data && [data.optionA, data.optionB, data.optionC, data.optionD]
+      that.info = {...data, options}
+      console.log(that.info)
+      that.isChecked = -1
+      that.isSuccess = -1
+      that.visibleDialog = false
+    }
   }
 }
 </script>
@@ -108,21 +184,29 @@ export default {
           box-sizing: border-box;
           box-shadow: 0 0.08rem 0.02rem black;
         }
-        .item:after{
-          position: absolute;
-          top:92%;
-          right: 15%;
-          content: '';
-          padding: 0.08rem 0.2rem;
-          background-color: #fff;
+        // .item:after{
+        //   position: absolute;
+        //   top:92%;
+        //   right: 15%;
+        //   content: '';
+        //   padding: 0.08rem 0.2rem;
+        //   background-color: #fff;
+        // }
+        // .item:before{
+        //   position: absolute;
+        //   top:92%;
+        //   right: 25%;
+        //   content: '';
+        //   padding: 0.08rem 0.1rem;
+        //   background-color: #fff;
+        // }
+        .item__active{
+          background-color: rgb(112, 189, 70);
+          color: #fff;
         }
-        .item:before{
-          position: absolute;
-          top:92%;
-          right: 25%;
-          content: '';
-          padding: 0.08rem 0.1rem;
-          background-color: #fff;
+        .item__success{
+          background-color: red;
+          color: #fff
         }
       }
     }
@@ -133,6 +217,29 @@ export default {
     top: -282%;
     left:28%;
     transform: scale3d(.55, .55, .6) translateX(-50%) ;
+  }
+  .my-dialog-wrapper{
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    .dialog__sub{
+      margin-bottom: .3rem;
+      font-size: .35rem;
+    }
+    .dialog__title{
+      margin-bottom: .4rem;
+      font-size: .5rem;
+      font-weight: bold;
+    }
+    .btn__submit{
+      width: 4rem;
+      height: .8rem;
+      margin: .4rem 0;
+      line-height: .8rem;
+      border-radius: .4rem;
+      background-color: #0669FF;
+    }
   }
 }
 </style>

@@ -51,3 +51,14 @@ export const download = ({
     materialUrl
   }
 }).catch(err => _catch(err))
+
+export const successful = ({
+  userId,
+  meetingId
+}) => $http.post({
+  url: window.rootPath + '/grade/addSucInfo.do',
+  data: {
+    userId,
+    meetingId
+  }
+}).catch(err => _catch(err))

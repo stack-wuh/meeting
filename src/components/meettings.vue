@@ -7,6 +7,9 @@
       <section class="content flex flex-flow__col">
         <h3 v-if="path === '/meettings'" class="content__title">2018年东风LEAR年会</h3>
         <article v-if="path === '/meettings'" class="content__info content__article" v-html="info.material" ></article>
+        <div v-if="path === '/seating'" class="img-box">
+          <img :src="info" alt="seat">
+        </div>
         <my-button :disabled="false" @handleClickBtn="DownLoad" v-if="path === '/meettings'" text="下载会议资料" type="danger"></my-button>
       </section>
   </section>
@@ -84,13 +87,11 @@ export default {
    .content{
      height: inherit;
      wdith: inherit;
-     // width: calc(100% - .6rem);
      margin-left: .3rem;
      margin-right: .3rem;
      background-color: #fff;
      border-top-left-radius: 4px;
      border-top-right-radius: 4px;
-
      .content__title{
        padding: .4rem;
        color: #FF0000;
@@ -99,6 +100,17 @@ export default {
        padding:0 .2rem;
        box-sizing: border-box;
        background-color: #fff;
+     }
+     .img-box{
+       width: 100%;
+       height: 100%;
+       box-sizing: border-box;
+       overflow: hidden;
+
+       img{
+         width: inherit;
+         height: inherit;
+       }
      }
    }
  }

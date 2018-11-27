@@ -6,7 +6,8 @@ import {
   getGradeList,
   _getSeating,
   getGradeInfo,
-  download
+  download,
+  successful
 }
 from '@/api/common.api'
 
@@ -121,6 +122,12 @@ const actions = {
     }
   },
 
+  /**
+   * [handleDownload 下载会议资料]
+   * @param  {[type]}  context     [description]
+   * @param  {[type]}  materialUrl [description]
+   * @return {Promise}             [description]
+   */
   async handleDownload(context, {
     materialUrl
   }) {
@@ -130,6 +137,22 @@ const actions = {
         materialUrl
       })
       location.href = response.data
+      return response
+    } catch (err) {
+      throw new Error(err)
+    }
+  },
+
+  async addSuccess(context, {
+    userId,
+    meetingId
+  }) {
+    try {
+      const response = await successful({
+        userId,
+        meetingId
+      })
+
       return response
     } catch (err) {
       throw new Error(err)

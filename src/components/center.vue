@@ -49,7 +49,7 @@ const list = [
     {
       label: '桌号',
       field: 'tableNum',
-      value: '6号桌',
+      value: '暂无',
     }
 ]
 

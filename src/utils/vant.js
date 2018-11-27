@@ -41,4 +41,4 @@ Vue.prototype.$dialog = Dialog
 window.$toast = Toast
 
 window.rootPath = '/meeting'
-window.WebScoket = 'ws://192.168.10.122:8082/'
+window.socketPath = 'ws://192.168.10.122:8082/'

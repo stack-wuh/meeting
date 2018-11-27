@@ -9,13 +9,13 @@
             :title="`${item.name}`"
             clickable
             >
-              <van-checkbox :disabled="canVote" :name="item" ref="checkboxs" />
+              <van-checkbox :disabled="!canVote" :name="item" ref="checkboxs" />
           </van-cell>
         </van-cell-group>
       </van-checkbox-group>
     </section>
-    <section class="btn-area">
-      <button @click="handleSubmit" :class="[canVote == false ? 'btn__submit' : 'btn__submit btn__disabled' ]" type="button" name="button">投票</button>
+    <section  class="btn-area">
+      <button @click="handleSubmit" :class="[canVote == true ? 'btn__submit' : 'btn__submit btn__disabled' ]" type="button" name="button">投票</button>
     </section>
   </section>
 </template>
@@ -37,7 +37,7 @@ export default {
 
       list: [],
       Socket: null,
-      canVote: LocalStorage.getItem('canVote') || false,
+      canVote: LocalStorage.getItem('canVote') || true,
       remind: '请选择三个部门后投票'
     }
   },
@@ -60,8 +60,8 @@ export default {
           message: `<img src="${bg_1}" alt="logo" style="width: 100%; height: 100%; margin: 0 auto;" />`
         })
         .then(() => {
-          this.Socket.send(JSON.stringify(data))
-          LocalStorage.setItem('canVote', true)
+          this.Socket.send(JSON.stringify(message))
+          localStorage.setItem('canVote', false)
           this.result = []
           setTimeout(() => {
             this.Socket.close()
@@ -75,18 +75,20 @@ export default {
           }, 1000)
         })
       }
-      const unCanVoteing = () => {
+      const voteing = () => {
         this.$dialog.confirm({
           title: '提示',
-          message: '请勿重复投票',
-          showConfirmButton: false,
-        }).catch(() => {
+          message: '请选择三个部门后提交',
+          showCancelButton: false
+        }).then(() => {
           this.handleCloseDialog()
         })
       }
       let actions = new Map([
-        [{canVote: false, result: 3}, canVoteing],
-        [{canVote: true, result: 0}, unCanVoteing]
+        [{canVote: true, result: 3}, canVoteing],
+        [{canVote: true, result: 2}, voteing],
+        [{canVote: true, result: 1}, voteing],
+        [{canVote: true, result: 0}, voteing]
       ])
       let action = [...actions].filter(([key, value]) => (key.canVote === this.canVote && key.result === ids.length))
       action.forEach(([key, value]) => {
@@ -95,11 +97,20 @@ export default {
     }
   },
   created(){
-    this.Socket = new WebSocket('ws://192.168.10.122:8082/meeting/voteWebsocket/2')
+    this.Socket = new WebSocket(window.socketPath + 'meeting/voteWebsocket/2/1')
+    setTimeout(() => {
+      this.canVote == 'false' &&  this.$toast({
+        type: 2,
+        msg: '您已经参与过本次投票了!'
+      })
+    }, 1000)
     this.getVoteInfo().then(res => {
       this.list = res.data
     })
   },
+  distoryed(){
+    this.Socket.close()
+  }
 }
 </script>
 <style lang="less" scoped>
