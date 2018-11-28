@@ -6,6 +6,8 @@ module.exports = {
   lintOnSave: false,
 
   baseUrl: process.env.NODE_ENV === 'production' ? '/' : '/',
+  assetsDir: 'static',
+  outputDir: 'static',
 
   devServer: {
     open: true,

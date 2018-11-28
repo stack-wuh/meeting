@@ -62,3 +62,12 @@ export const successful = ({
     meetingId
   }
 }).catch(err => _catch(err))
+
+export const validGread = ({
+  userId
+}) => $http.post({
+  url: window.rootPath + '/grade/checkTopicGread.do',
+  data: {
+    userId
+  }
+})

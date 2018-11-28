@@ -16,7 +16,7 @@
       </ul>
     </section>
     <section class="btn-area">
-        <van-button @click="$router.push({path: '/login'})" class="my-btn__submit" size="large" type="danger">
+        <van-button @click="handleSignOut" class="my-btn__submit" size="large" type="danger">
           <span class="my-btn__text">退出登录</span>
         </van-button>
     </section>
@@ -66,7 +66,13 @@ export default {
   methods: {
     ...mapActions({
       'handleIndexInfo': 'handleIndexInfo'
-    })
+    }),
+    handleSignOut(){
+      window.localStorage.setItem('userInfo', JSON.stringify({}))
+      setTimeout(() => {
+        this.$router.push({path: '/login'})
+      }, 1000)
+    }
   },
   created(){
     this.handleIndexInfo().then(res => {

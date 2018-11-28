@@ -60,6 +60,8 @@ export default {
     },
   },
   created(){
+    let local = window.localStorage.getItem('userInfo')
+    local = local && JSON.parse(local)
     this.Socket = new WebSocket(window.socketPath + 'meeting/websocket')
     setTimeout(() => {
 
@@ -117,7 +119,7 @@ export default {
               let elem = document.querySelector('#text')
               let message = {
                 message: text,
-                userId: 15
+                userId: local.id
               }
               that.Socket.send(JSON.stringify(message))
               elem.value = ' '

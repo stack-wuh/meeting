@@ -28,3 +28,10 @@ export const getIdentifyCode = ({
 export const getIndexInfo = () => $http.post({
   url: window.rootPath + '/index/init.do'
 }).catch(err => _catch(err))
+
+export const vliadVote = ({
+  data
+}) => $http.post({
+  url: window.rootPath + '/vote/checkVote.do',
+  data
+}).catch(err => _catch(err))

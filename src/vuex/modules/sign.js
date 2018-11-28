@@ -1,7 +1,8 @@
 import {
   signIn,
   getIdentifyCode,
-  getIndexInfo
+  getIndexInfo,
+  vliadVote
 } from '@/api/signin.api.js'
 
 
@@ -31,6 +32,7 @@ const actions = {
         phone,
         identify
       })
+      window.localStorage.setItem('userInfo', JSON.stringify(res.data))
       setTimeout(() => {
         res.status === 0 && window.$router.push({
           path: 'index'
@@ -61,9 +63,34 @@ const actions = {
     }
   },
 
+  /**
+   * [handleIndexInfo 获取首页的详情]
+   * @return {Promise} [description]
+   */
   async handleIndexInfo() {
     try {
       const response = await getIndexInfo()
+      return response
+    } catch (err) {
+      throw new Error(err)
+    }
+  },
+
+  /**
+   * [handleCheckVote 验证是否部门投票]
+   * @param  {[type]}  context [vuex对象]
+   * @param  {[type]}  userId  [用户ID]
+   * @return {Promise}         [description]
+   */
+  async handleCheckVote(context, {
+    userId
+  }) {
+    try {
+      const response = await vliadVote({
+        data: {
+          userId
+        }
+      })
       return response
     } catch (err) {
       throw new Error(err)

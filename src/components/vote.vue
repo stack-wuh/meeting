@@ -37,20 +37,23 @@ export default {
 
       list: [],
       Socket: null,
-      canVote: LocalStorage.getItem('canVote') || true,
+      canVote: true,
       remind: '请选择三个部门后投票'
     }
   },
   methods: {
     ...mapActions({
       'getVoteInfo': 'getVoteInfo',
-      'postVoteList': 'postVoteList'
+      'postVoteList': 'postVoteList',
+      'handleCheckVote': 'handleCheckVote'
     }),
     handleSubmit(){
+      let local = localStorage.getItem('userInfo')
+      local = local && JSON.parse(local)
       let ids = this.result && this.result.map(item => item.id)
       let message = {
         depId: ids,
-        voteId: 1
+        voterId: local.id
       }
       let bg_1 = require('@/assets/imgs/icon-support.png')
 
@@ -97,15 +100,22 @@ export default {
     }
   },
   created(){
-    this.Socket = new WebSocket(window.socketPath + 'meeting/voteWebsocket/2/1')
-    setTimeout(() => {
-      this.canVote == 'false' &&  this.$toast({
-        type: 2,
-        msg: '您已经参与过本次投票了!'
-      })
-    }, 1000)
+    let local = localStorage.getItem('userInfo')
+    local = local && JSON.parse(local)
+    this.Socket = new WebSocket(window.socketPath + `meeting/voteWebsocket/${local.id}/${local.orginalJob || 0}`)
     this.getVoteInfo().then(res => {
       this.list = res.data
+    })
+    this.handleCheckVote({userId: local.id}).then(res => {
+      this.canVote = res.status === 0 ? true : false
+      if(res.status){
+        setTimeout(() => {
+          this.$toast({
+            type: 3,
+            msg: '您已经参与过本次投票了!'
+          })
+        }, 1000)
+      }
     })
   },
   distoryed(){

@@ -7,7 +7,8 @@ import {
   _getSeating,
   getGradeInfo,
   download,
-  successful
+  successful,
+  validGread,
 }
 from '@/api/common.api'
 
@@ -151,6 +152,26 @@ const actions = {
       const response = await successful({
         userId,
         meetingId
+      })
+
+      return response
+    } catch (err) {
+      throw new Error(err)
+    }
+  },
+
+  /**
+   * [handleVildaGrade 议题打分验证]
+   * @param  {[type]}  context [description]
+   * @param  {[type]}  userId  [description]
+   * @return {Promise}         [description]
+   */
+  async handleVildaGrade(context, {
+    userId
+  }) {
+    try {
+      const response = await validGread({
+        userId
       })
 
       return response

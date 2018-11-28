@@ -90,9 +90,11 @@ export default {
       }, 1000)
     },
     jump2Other(){
+      let local = window.localStorage.getItem('userInfo')
+      local = local && JSON.parse(local)
       this.visibleDialog = false
       let data = {
-        userId: 1,
+        userId: local.id,
         meetingId: this.info.meetingId
       }
       if(this.canGo){
@@ -105,12 +107,15 @@ export default {
   },
   created(){
     let that = this
-    this.Socket = new WebSocket(window.socketPath + 'meeting/passWebsocket/14/0')
+    let local = window.localStorage.getItem('userInfo')
+    local = local && JSON.parse(local)
+    this.Socket = new WebSocket(window.socketPath + `meeting/passWebsocket/${local.id}/0`)
+    // console.log(this.Socket)
     this.Socket.onmessage = function(e){
       let data = JSON.parse(e.data)
       let options = data && [data.optionA, data.optionB, data.optionC, data.optionD]
       that.info = {...data, options}
-      console.log(that.info)
+      // console.log(that.info)
       that.isChecked = -1
       that.isSuccess = -1
       that.visibleDialog = false

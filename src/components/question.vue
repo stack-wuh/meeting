@@ -52,12 +52,13 @@ export default {
       temp__index: -1, // 临时保存单击议题的数组下标
 
       Socket: null,
-      canShowQues: localStorage.getItem('canShowQues') || true
+      canShowQues: true
     }
   },
   methods: {
     ...mapActions({
-      'getGradeInfo': 'getGradeInfo'
+      'getGradeInfo': 'getGradeInfo',
+      'handleVildaGrade': 'handleVildaGrade'
     }),
     handleClickSubmit(item, index){
       this.visibleDialog = true
@@ -74,8 +75,10 @@ export default {
       this.score = ''
     },
     submit(){
+      let local = window.localStorage.getItem('userInfo')
+      local = local && JSON.parse(local)
       let data = this.list.map(item => {
-        return {explainer: item.userId, topicId: item.id, score: item.score}
+        return {explainer: local.id, topicId: item.topicId, score: item.score}
       })
       this.Socket.send(JSON.stringify(data))
       this.Socket.close()
@@ -86,16 +89,22 @@ export default {
     }
   },
   created(){
-    this.Socket = new WebSocket('ws://192.168.10.122:8082/meeting/topicWebsocket/1/2')
-    setTimeout(() => {
-      this.canShowQues == 'false' &&
-      this.$toast({
-        type: 2,
-        msg: '您已经参与过本次投票了!'
-      })
-    }, 1000)
+    let local = window.localStorage.getItem('userInfo')
+    local = local && JSON.parse(local)
+    this.Socket = new WebSocket(window.socketPath + `meeting/topicWebsocket/${local.id}/${local.orginalJob || 0}`)
+    // console.log(this.Socket)
+    // setTimeout(() => {
+    //   this.canShowQues == 'false' &&
+    //   this.$toast({
+    //     type: 2,
+    //     msg: '您已经参与过本次投票了!'
+    //   })
+    // }, 1000)
     this.getGradeInfo().then(res =>{
       this.list = res.data
+    })
+    this.handleVildaGrade({userId: local.id}).then(res => {
+      this.canShowQues = res.status === 0 ? true : false
     })
   }
 }
