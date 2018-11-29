@@ -41,4 +41,7 @@ Vue.prototype.$dialog = Dialog
 window.$toast = Toast
 
 window.rootPath = '/meeting'
-window.socketPath = 'ws://192.168.10.122:8082/'
+//线上webSocket地址
+window.socketPath = 'http://39.108.224.177:8081'
+//线下webSocket地址
+// window.socketPath = 'ws://192.168.10.122:8082/'
