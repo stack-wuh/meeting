@@ -4,7 +4,9 @@ import {
   getIndexInfo,
   vliadVote
 } from '@/api/signin.api.js'
-
+import {
+_toast
+} from '@/utils/global'
 
 const state = {
 
@@ -28,6 +30,13 @@ const actions = {
     identify
   }) {
     try {
+      if (!phone || !identify) {
+        _toast({
+          type: 3,
+          msg: '请编辑必填项后登陆!'
+        })
+        return
+      }
       const res = await signIn({
         phone,
         identify
