@@ -261,7 +261,7 @@ export default {
       transform: rotate(0deg);
       width: 100vw;
       height: 100vh;
-      background-color: red;
+      // background-color: red;
       .content-input{
         position: fixed;
         display: flex;
