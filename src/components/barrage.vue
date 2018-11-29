@@ -18,6 +18,12 @@ export default {
   data(){
     return {
       Socket: null,
+      orientation: 0
+    }
+  },
+  watch:{
+    orientation(){
+      this.translateScreen()
     }
   },
   methods: {
@@ -33,26 +39,49 @@ export default {
         elem.style.zIndex = '100'
       }
       var evt = "onorientationchange" in window ? "orientationchange" : "resize"
+      window.addEventListener(evt, resize, false)
+      function resize(flag) {
+        if(window.orientation == 0 || window.orientation == 180){
+          elem.style.width = '100vh'
+          elem.style.height = '100vw'
+          elem.style.top = ((height - width ) / 2) + 'px'
+          elem.style.left = (0 - (height - width) / 2) + 'px'
+          elem.style.transform = 'rotate(90deg)'
+          elem.style.transformOrigin = '50%'
+          elem.style.zIndex = '100'
+        }else{
+          elem.style.width = '100vw'
+          elem.style.height = '100vh'
+          elem.style.top = '0'
+          elem.style.left = '0'
+          elem.style.transform = 'none'
+          elem.style.transformOrigin = 'none'
+          elem.style.zIndex = '100'
+        }
+      }
+      resize.call(this, true)
+      return
       window.addEventListener(evt, function(){
         setTimeout(() =>{
           let width = document.documentElement.clientWidth,
               height = document.documentElement.clientHeight,
               elem = this.$refs.print
           if(width > height){ // 横屏
-            elem.style.width = width - 16 + 'px'
-            elem.style.height = height + 'px'
+            elem.style.width = '100vh'
+            elem.style.height = '100vw'
             elem.style.top = '0'
             elem.style.left = '0'
             elem.style.transform = 'none'
-            elem.style.transformOrigin = '50%'
+            elem.style.transformOrigin = 'none'
             elem.style.zIndex = '100'
+            elem.style.backgroundColor = 'blue'
           }else { // 竖屏
             elem.style.width = height - 16 + 'px'
             elem.style.height = width + 'px'
             elem.style.top = ((height - width ) / 2) + 'px'
             elem.style.left = (0 - (height - width) / 2) + 'px'
             elem.style.transform = 'rotate(90deg)'
-            // elem.style.transformOrigin = '0'
+            elem.style.transformOrigin = '50%'
             elem.style.zIndex = '100'
           }
         }, 300)
@@ -64,7 +93,6 @@ export default {
     local = local && JSON.parse(local)
     this.Socket = new WebSocket(window.socketPath + 'meeting/websocket')
     setTimeout(() => {
-
       (function (that) {
           class Barrage {
               constructor(id) {
@@ -121,11 +149,13 @@ export default {
                 message: text,
                 userId: local.id
               }
+              that.$toast({type: 2, msg: `${message}`})
               that.Socket.send(JSON.stringify(message))
               elem.value = ' '
           };
           let textList = ['热场弹幕', '新年快乐', '吉祥如意', '心想事成', '热场弹幕', '热场弹幕', '新年快乐', '吉祥如意', '心想事成', '热场弹幕', '新年快乐', '吉祥如意', '心想事成', ];
           that.Socket.onmessage = function (e){
+            console.log(e.data)
             textList.push(e.data)
             for(var i = 0; i < textList.length; i ++){
               barage.shoot(textList[i])
@@ -210,9 +240,12 @@ export default {
         font-size: .2rem;
         border: none;
         #text{
-          width: 4rem;
+          width: 6rem;
           margin-right: .2rem;
           font-size: .2rem;
+        }
+        #send{
+          font-size: .26rem;
         }
       }
     }
@@ -228,19 +261,26 @@ export default {
       transform: rotate(0deg);
       width: 100vw;
       height: 100vh;
+      background-color: red;
       .content-input{
         position: fixed;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 6rem;
-        height: .6rem;
-        margin-left: 10%;
+        width: 8rem;
+        height: .8rem;
+        margin-left: 50%;
+        transform: translateX(-50%);
         font-size: .1rem;
         border: none;
         #text{
-          width: 4rem;
+          width: 6rem;
+          height: .6rem;
           margin-right: .2rem;
+          font-size: .3rem;
+        }
+        #send{
+          font-size: .26rem;
         }
       }
     }

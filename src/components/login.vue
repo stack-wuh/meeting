@@ -1,5 +1,5 @@
 <template>
-  <section class="wrapper">
+  <section class="wrapper login-wrapper">
     <header class="header flex flex-justify__center">
       <img class="img-logo" src="../assets/imgs/logo.png" alt="logo">
     </header>
@@ -50,13 +50,13 @@ export default{
        count --
        if(count <= 0){
          clearInterval(timer)
+         this.isReload = false
          this.remind = '发送验证码'
        }else{
          this.remind = `${count}s后再次发送`
          this.isReload = true
        }
       }, 1000)
-      this.isReload = false
       this.handleIdentifyCode({phone: this.phone})
     }
   },

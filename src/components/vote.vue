@@ -108,14 +108,14 @@ export default {
     })
     this.handleCheckVote({userId: local.id}).then(res => {
       this.canVote = res.status === 0 ? true : false
-      if(res.status){
-        setTimeout(() => {
-          this.$toast({
-            type: 3,
-            msg: '您已经参与过本次投票了!'
-          })
-        }, 1000)
-      }
+      // if(res.status){
+      //   setTimeout(() => {
+      //     this.$toast({
+      //       type: 3,
+      //       msg: '您已经参与过本次投票了!'
+      //     })
+      //   }, 1000)
+      // }
     })
   },
   distoryed(){
