@@ -149,7 +149,7 @@ export default {
                 message: text,
                 userId: local.id
               }
-              that.$toast({type: 2, msg: `${message}`})
+              // that.$toast({type: 2, msg: `${message}`})
               that.Socket.send(JSON.stringify(message))
               elem.value = ' '
           };
