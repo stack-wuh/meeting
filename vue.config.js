@@ -1,6 +1,7 @@
 const autoprefixer = require('autoprefixer')
 const pxtorem = require('postcss-pxtorem')
 const modifyVars = require('./src/utils/vant.css.js')
+const CompressionWebpackPlugin = require('compression-webpack-plugin')
 
 module.exports = {
   lintOnSave: false,
@@ -42,4 +43,16 @@ module.exports = {
       }
     }
   },
+  configureWebpack: () => {
+    if (process.env.NODE_ENV === 'production') {
+      return {
+        plugins: [new CompressionWebpackPlugin({
+          test: /\.js$|\.css$/,
+          threshold: 5120,
+          deleteOriginalAssets: false,
+          algorithm: 'gzip'
+        })]
+      }
+    }
+  }
 }
