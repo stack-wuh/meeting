@@ -42,6 +42,6 @@ window.$toast = Toast
 
 window.rootPath = '/meeting'
 //线上webSocket地址
-window.socketPath = 'ws://39.108.224.177:8081/'
+window.socketPath = 'ws://47.105.94.178:8081/'
 //线下webSocket地址
 // window.socketPath = 'ws://192.168.10.122:8082/'
