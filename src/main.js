@@ -5,23 +5,28 @@ import store from './store'
 
 import '@/utils/vant'
 
+import {
+  _signIn
+} from '@/api/signin.api.js'
+
 Vue.config.productionTip = false
 
 window.$router = router
 
 router.beforeEach((to, from, next) => {
-  const userInfo = window.localStorage.getItem('userInfo') ? true : false
+  let userInfo = window.localStorage.getItem('userInfo')
+    userInfo = userInfo && JSON.parse(userInfo)
+  const exprie = userInfo && userInfo.exprie - new Date().getTime() > 0 ? true : false
   const name = to.name
   if(name === 'login') next()
   if(name !== 'login'){
-    if(userInfo){
+    if(exprie){
       next()
-    }else{
-      next({
-        name: 'login'
-      })
+    }else {
+      router.push({path: '/login'})
     }
   }
+  next()
 })
 
 new Vue({

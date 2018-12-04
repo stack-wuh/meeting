@@ -1,57 +1,64 @@
 <template>
-  <section class="wrapper">
-    <header class="header flex flex-justify__center">
-      <strong>{{info.sequenceNum || 0}}/{{info.total || 0}}</strong>
-    </header>
-    <section class="list-box">
-      <section class="head flex flex-justify__end">
-          <img class="head__star" src="../assets/imgs/icon-star.png" alt="star">
-          <span class="head__num flex-self__end">{{info.count || 0}}人</span>
+  <section  class="wrapper">
+      <header class="header flex flex-justify__center">
+        <strong>{{info.sequenceNum || 0}}/{{info.total || 0}}</strong>
+      </header>
+      <section class="list-box">
+        <section class="head flex flex-justify__end">
+            <img class="head__star" src="../assets/imgs/icon-star.png" alt="star">
+            <span class="head__num flex-self__end">{{info.count || 0}}人</span>
+        </section>
+        <section v-if="info.status === 0" class="list">
+          <h4 class="list__title">{{info.content || '标题'}}</h4>
+          <ul class="list__item">
+              <li @click="handleSubmit(info.optionA, 0)" :class="[isChecked == 0 ? 'item item__active' : 'item', isSuccess == 0 ? 'item item__success' : 'item']">A. {{info.optionA}}</li>
+              <li @click="handleSubmit(info.optionB, 1)" :class="[isChecked == 1 ? 'item item__active' : 'item', isSuccess == 1 ? 'item item__success' : 'item']">B. {{info.optionB}}</li>
+              <li @click="handleSubmit(info.optionC, 2)" :class="[isChecked == 2 ? 'item item__active' : 'item', isSuccess == 2 ? 'item item__success' : 'item']">C. {{info.optionC}}</li>
+              <li @click="handleSubmit(info.optionD, 3)" :class="[isChecked == 3 ? 'item item__active' : 'item', isSuccess == 3 ? 'item item__success' : 'item']">D. {{info.optionD}}</li>
+          </ul>
+        </section>
+        <section v-if="info.status === 1" class="list">
+          <h4 class="list__title">{{info.content || '标题'}}</h4>
+          <ul class="list__item">
+              <li :class="[isSuccess == 0 ? 'item item__success' : 'item']">A. {{info.optionA}}</li>
+              <li :class="[isSuccess == 1 ? 'item item__success' : 'item']">B. {{info.optionB}}</li>
+              <li :class="[isSuccess == 2 ? 'item item__success' : 'item']">C. {{info.optionC}}</li>
+              <li :class="[isSuccess == 3 ? 'item item__success' : 'item']">D. {{info.optionD}}</li>
+          </ul>
+        </section>
       </section>
-      <section v-if="info.status === 0" class="list">
-        <h4 class="list__title">{{info.content || '标题'}}</h4>
-        <ul class="list__item">
-            <li @click="handleSubmit(info.optionA, 0)" :class="[isChecked == 0 ? 'item item__active' : 'item', isSuccess == 0 ? 'item item__success' : 'item']">A. {{info.optionA}}</li>
-            <li @click="handleSubmit(info.optionB, 1)" :class="[isChecked == 1 ? 'item item__active' : 'item', isSuccess == 1 ? 'item item__success' : 'item']">B. {{info.optionB}}</li>
-            <li @click="handleSubmit(info.optionC, 2)" :class="[isChecked == 2 ? 'item item__active' : 'item', isSuccess == 2 ? 'item item__success' : 'item']">C. {{info.optionC}}</li>
-            <li @click="handleSubmit(info.optionD, 3)" :class="[isChecked == 3 ? 'item item__active' : 'item', isSuccess == 3 ? 'item item__success' : 'item']">D. {{info.optionD}}</li>
-        </ul>
-      </section>
-      <section v-if="info.status === 1" class="list">
-        <h4 class="list__title">{{info.content || '标题'}}</h4>
-        <ul class="list__item">
-            <li :class="[isSuccess == 0 ? 'item item__success' : 'item']">A. {{info.optionA}}</li>
-            <li :class="[isSuccess == 1 ? 'item item__success' : 'item']">B. {{info.optionB}}</li>
-            <li :class="[isSuccess == 2 ? 'item item__success' : 'item']">C. {{info.optionC}}</li>
-            <li :class="[isSuccess == 3 ? 'item item__success' : 'item']">D. {{info.optionD}}</li>
-        </ul>
-      </section>
-    </section>
 
-    <section class="clock-wrapper">
-      {{count}}
-    </section>
+      <section :class="['clock-wrapper',
+        count > 0 ? 'clock-wrapper__active' : 'clock-wrapper__undo',
+        count > 5 ? 'clock-wrapper__info-text' : 'clock-wrapper__danger-text']">
+          {{count}}
+      </section>
 
-    <my-dialog
-      :visibleDialog="visibleDialog"
-      title=""
-      :canShowConfirmButton="false"
-      :canShowCancelButton="false"
-      confirmButtonText="继续闯关"
-    >
-      {{info.count}} -- {{info.sequenceNum}}
-      <div class="my-dialog-wrapper" slot="text">
-        <div class="my-dialog-img">
-          <img :src="successImg" alt="logo" style="width: 100%; height: 100%;">
+      <my-dialog
+        :visibleDialog="visibleDialog"
+        title=""
+        :canShowConfirmButton="false"
+        :canShowCancelButton="false"
+        confirmButtonText="继续闯关"
+      >
+        {{info.count}} -- {{info.sequenceNum}}
+        <div class="my-dialog-wrapper" slot="text">
+          <div class="my-dialog-img">
+            <img :src="successImg" alt="logo" style="width: 100%; height: 100%;">
+          </div>
+          <p class="dialog__sub">{{canGo ? '恭喜你' : '很遗憾'}}</p>
+          <p v-if="info.sequenceNum !== info.total" class="dialog__title">{{canGo ? '回答正确' : '闯关失败'}}</p>
+          <p v-if="info.sequenceNum == info.total" class="dialog__title">{{canGo ? '闯关成功' : '闯关失败'}}</p>
+          <van-button v-if="info.sequenceNum == info.total" @click="jump2Other" type="primary" class="btn__submit">回到首页</van-button>
+          <van-button v-if="info.sequenceNum !== info.total" @click="visibleDialog = false" type="primary" class="btn__submit">{{canGo ? '继续闯关' : '继续观战'}}</van-button>
         </div>
-        <p class="dialog__sub">{{canGo ? '恭喜你' : '很遗憾'}}</p>
-        <p v-if="info.sequenceNum !== info.total" class="dialog__title">{{canGo ? '回答正确' : '闯关失败'}}</p>
-        <p v-if="info.sequenceNum == info.total" class="dialog__title">{{canGo ? '闯关成功' : '闯关失败'}}</p>
-        <van-button v-if="info.sequenceNum == info.total" @click="jump2Other" type="primary" class="btn__submit">回到首页</van-button>
-        <van-button v-if="info.sequenceNum !== info.total" @click="visibleDialog = false" type="primary" class="btn__submit">{{canGo ? '继续闯关' : '继续观战'}}</van-button>
-      </div>
-    </my-dialog>
-</section>
+      </my-dialog>
+  </section>
+  <!-- <section v-else  class="un-wrapper">
+    <div class="tips-text">
+      等待答题
+    </div>
+  </section> -->
 </template>
 <script>
 import {mapActions} from 'vuex'
@@ -87,7 +94,6 @@ export default {
       let timer = setInterval(() => {
         this.count --
         if(this.count <= 0){
-          console.log('is clicked')
           clearInterval(timer)
         }
       }, 1000)
@@ -126,12 +132,11 @@ export default {
     let local = window.localStorage.getItem('userInfo')
     local = local && JSON.parse(local)
     this.Socket = new WebSocket(window.socketPath + `meeting/passWebsocket/${local.id}/0`)
-    // console.log(this.Socket)
     this.Socket.onmessage = function(e){
+      console.log(e)
       let data = JSON.parse(e.data)
       let options = data && [data.optionA, data.optionB, data.optionC, data.optionD]
       that.info = {...data, options}
-      // console.log(that.info)
       that.isChecked = -1
       that.isSuccess = -1
       that.visibleDialog = false
@@ -144,7 +149,7 @@ export default {
 .wrapper{
   width: inherit;
   height: inherit;
-  background-image: url('../assets/imgs/bg_7.png');
+  background-image: url('../assets/imgs/bg_red.png');
   overflow-y: scroll;
   header.header{
     width:inherit;
@@ -268,10 +273,60 @@ export default {
     position: absolute;
     top: 0;
     left: 0;
-    width: 2rem;
-    height: 1rem;
+    width: 100vw;
+    height: 20vh;
+    font-size: 1rem;
+    text-align: center;
+    line-height: 20vh;
     color: #fff;
-    background-color: red;
+    background-color: rgba(0, 0, 0, .5);
+  }
+  .clock-wrapper__active{
+    animation: 1s active linear infinite ;
+  }
+  .clock-wrapper__undo{
+    display: none;
+  }
+  .clock-wrapper__danger-text{
+    color: red;
+  }
+  .clock-wrapper__info-text{
+    color: #fff;
+  }
+  @keyframes active{
+    0%{
+      font-size: 0;
+    }
+    50%{
+      font-size: .5rem;
+    }
+    100%{
+      font-size: 1rem;
+    }
+  }
+}
+
+.un-wrapper{
+  width: 100vw;
+  height: 100vh;
+  background-image: url('../assets/imgs/bg_loading.jpg');
+  background-size: 100vw 100vh;
+  background-repeat: no-repeat;
+  background-position: center;
+
+  .tips-text{
+    position: fixed;
+    left: 50%;
+    bottom: 10%;
+    transform: translateX(-50%);
+    width: 60vw;
+    height: 6vh;
+    margin: 0 auto;
+    color: red;
+    text-align: center;
+    line-height: 6vh;
+    border-radius: 4px;
+    background-color: #fff;
   }
 }
 </style>

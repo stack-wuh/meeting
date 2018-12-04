@@ -2,7 +2,7 @@ import {
   signIn,
   getIdentifyCode,
   getIndexInfo,
-  vliadVote
+  vliadVote,
 } from '@/api/signin.api.js'
 import {
 _toast
@@ -27,7 +27,8 @@ const actions = {
    */
   async handleSignIn(context, {
     phone,
-    identify
+    identify,
+    check_identify
   }) {
     try {
       if (!phone || !identify) {
@@ -37,11 +38,17 @@ const actions = {
         })
         return
       }
+      if(identify != check_identify){
+        _toast({
+          type: 3,
+          msg: '验证码错误!'
+        })
+        return
+      }
       const res = await signIn({
         phone,
-        identify
       })
-      window.localStorage.setItem('userInfo', JSON.stringify(res.data))
+      window.localStorage.setItem('userInfo', JSON.stringify({...res.data, exprie: +new Date() + (60 * 60 * 4 * 1000)}))
       setTimeout(() => {
         res.status === 0 && window.$router.push({
           path: 'index'

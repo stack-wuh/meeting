@@ -15,7 +15,7 @@
     </section>
     <mark class="form-msg">绑定手机号体验优质服务, 并提升信息安全性</mark>
     <section class="btn-area">
-      <van-button @click="handleSignIn({phone, identify})" size="large" type="danger" style="height: .8rem;line-height: .8rem;">登录</van-button>
+      <van-button @click="handleSignIn({phone, identify, check_identify})" size="large" type="danger" style="height: .8rem;line-height: .8rem;">登录</van-button>
     </section>
   </section>
 </template>
@@ -31,6 +31,7 @@ export default{
     return {
       phone: '',
       identify: '',
+      check_identify: '',
       sessionId: '',
 
       remind: '发送验证码',
@@ -57,7 +58,9 @@ export default{
          this.isReload = true
        }
       }, 1000)
-      this.handleIdentifyCode({phone: this.phone})
+      this.handleIdentifyCode({phone: this.phone}).then(res =>{
+        this.check_identify = res.data.identify
+      })
     }
   },
   created(){

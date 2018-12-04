@@ -1,19 +1,7 @@
 <template>
   <section class="wrapper">
-    <!-- <header class="header flex flex-align__center flex-justify__between">
-      <div @click="jumpToOther({path: '/center'})" class="avatar-box">
-        <img class="avatar__img" :src="info.headPic || defaultAvatar" alt="avatar">
-      </div>
-      <div class="avatar-content">
-        <p class="avatar__name">{{info.name}}</p>
-        <p class="avatar__name avatar__phone">{{info.phone}}</p>
-      </div>
-      <div @click="jumpToOther({path: '/center'})" class="align-self__end">
-        <img src="../assets/imgs/icon-user.png" style="width: .5rem; height: .5rem;" alt="bg_1">
-      </div>
-    </header> -->
     <header class="header-wrapper">
-      <div class="avatar-box">
+      <div @click="jumpToOther({path: '/center'})" class="avatar-box">
         <img :src="info.headPic || defaultAvatar" alt="avatar">
       </div>
     </header>
@@ -25,9 +13,6 @@
       class="my-notice-bar">
     </van-notice-bar>
 
-    <!-- <section @click="jumpToOther({path: '/answer'})" v-if="question" class="img-box">
-      <img  :src="question.picture || defaultBg" alt="">
-    </section> -->
 
     <section class="card-list">
       <section @click="jumpToOther(item)" v-for="(item, index) in list" :key="index" class="card-item">
