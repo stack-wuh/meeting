@@ -9,7 +9,7 @@
             :title="`${item.name}`"
             clickable
             >
-              <van-checkbox :disabled="!canVote" :name="item" ref="checkboxs" />
+              <van-checkbox  :name="item" ref="checkboxs" />
           </van-cell>
         </van-cell-group>
       </van-checkbox-group>
@@ -51,6 +51,7 @@ export default {
       let local = localStorage.getItem('userInfo')
       local = local && JSON.parse(local)
       let ids = this.result && this.result.map(item => item.id)
+      let that = this
       let message = {
         depId: ids,
         voterId: local.id
@@ -81,19 +82,18 @@ export default {
       const voteing = () => {
         this.$dialog.confirm({
           title: '提示',
-          message: '请选择三个部门后提交',
+          message: '请选择一个部门后提交',
           showCancelButton: false
         }).then(() => {
-          this.handleCloseDialog()
+          that.handleCloseDialog()
         })
       }
       let actions = new Map([
-        [{canVote: true, result: 3}, canVoteing],
-        [{canVote: true, result: 2}, voteing],
-        [{canVote: true, result: 1}, voteing],
-        [{canVote: true, result: 0}, voteing]
+        [{canVote: true, result: /1/}, canVoteing],
+        [{canVote: true, result: /0/}, voteing],
+        [{canVote: true, result: /[2-]/}, voteing]
       ])
-      let action = [...actions].filter(([key, value]) => (key.canVote === this.canVote && key.result === ids.length))
+      let action = [...actions].filter(([key, value]) => (key.canVote === this.canVote && key.result.test(ids)))
       action.forEach(([key, value]) => {
         value.call(this)
       })
@@ -108,14 +108,6 @@ export default {
     })
     this.handleCheckVote({userId: local.id}).then(res => {
       this.canVote = res.status === 0 ? true : false
-      // if(res.status){
-      //   setTimeout(() => {
-      //     this.$toast({
-      //       type: 3,
-      //       msg: '您已经参与过本次投票了!'
-      //     })
-      //   }, 1000)
-      // }
     })
   },
   distoryed(){

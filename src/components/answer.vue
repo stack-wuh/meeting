@@ -28,6 +28,10 @@
       </section>
     </section>
 
+    <section class="clock-wrapper">
+      {{count}}
+    </section>
+
     <my-dialog
       :visibleDialog="visibleDialog"
       title=""
@@ -70,12 +74,24 @@ export default {
       isChecked: -1, // 选中选项时候的状态
       isSuccess: -1, //正确答案的状态
       canGo: false, // 是否答题成功
+
+      count: 30, //答题倒计时 -- 默认30
     }
   },
   methods: {
     ...mapActions({
       'addSuccess': 'addSuccess'
     }),
+    clockNow(){
+      if(timer) clearInterval(timer)
+      let timer = setInterval(() => {
+        this.count --
+        if(this.count <= 0){
+          console.log('is clicked')
+          clearInterval(timer)
+        }
+      }, 1000)
+    },
     handleSubmit(option, index){
       this.isChecked = index
       let successIndex = this.info.options.indexOf(this.info.rightAnswer)
@@ -120,6 +136,7 @@ export default {
       that.isSuccess = -1
       that.visibleDialog = false
     }
+    this.clockNow()
   }
 }
 </script>
@@ -245,6 +262,16 @@ export default {
       border-radius: .4rem;
       background-color: #0669FF;
     }
+  }
+
+  .clock-wrapper{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2rem;
+    height: 1rem;
+    color: #fff;
+    background-color: red;
   }
 }
 </style>

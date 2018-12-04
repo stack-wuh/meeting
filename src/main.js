@@ -9,6 +9,20 @@ Vue.config.productionTip = false
 
 window.$router = router
 
+router.beforeEach((to, from, next) => {
+  const userInfo = window.localStorage.getItem('userInfo') ? true : false
+  const name = to.name
+  if(name === 'login') next()
+  if(name !== 'login'){
+    if(userInfo){
+      next()
+    }else{
+      next({
+        name: 'login'
+      })
+    }
+  }
+})
 
 new Vue({
   router,

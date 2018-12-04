@@ -1,6 +1,6 @@
 <template>
   <section class="wrapper">
-    <header class="header flex flex-align__center flex-justify__between">
+    <!-- <header class="header flex flex-align__center flex-justify__between">
       <div @click="jumpToOther({path: '/center'})" class="avatar-box">
         <img class="avatar__img" :src="info.headPic || defaultAvatar" alt="avatar">
       </div>
@@ -11,6 +11,11 @@
       <div @click="jumpToOther({path: '/center'})" class="align-self__end">
         <img src="../assets/imgs/icon-user.png" style="width: .5rem; height: .5rem;" alt="bg_1">
       </div>
+    </header> -->
+    <header class="header-wrapper">
+      <div class="avatar-box">
+        <img :src="info.headPic || defaultAvatar" alt="avatar">
+      </div>
     </header>
 
     <van-notice-bar
@@ -20,14 +25,14 @@
       class="my-notice-bar">
     </van-notice-bar>
 
-    <section @click="jumpToOther({path: '/answer'})" v-if="question" class="img-box">
+    <!-- <section @click="jumpToOther({path: '/answer'})" v-if="question" class="img-box">
       <img  :src="question.picture || defaultBg" alt="">
-    </section>
+    </section> -->
 
     <section class="card-list">
       <section @click="jumpToOther(item)" v-for="(item, index) in list" :key="index" class="card-item">
         <img :src="item.picture || item.url" alt="bgImg">
-        <span class="card-title">{{item.label}}</span>
+        <span class="card-title">{{item.label || item.name}}</span>
       </section>
     </section>
 
@@ -55,7 +60,7 @@ const list = [
     label: '座位安排',
     url: require('../assets/imgs/bg_6.png'),
     path: '/seating',
-  }
+  },
 ]
 export default {
   props: {},
@@ -82,20 +87,21 @@ export default {
     }
   },
   created(){
+    let map = new Map([
+      [1, 'vote'],
+      [2, 'question'],
+      [3, 'meettings'],
+      [4, 'seating']
+    ])
     this.handleIndexInfo().then(res => {
       this.info = res.data.info
-      let _arr = []
-      this.list.map(item => {
-        res.data.data.map(list => {
-          if(item.label === list.name){
-            _arr.push({...item, ...list})
-          }else if(list.name === '闯关答题'){
-            this.question = list
-          }
-        })
+      this.list = res.data.data.map(item => {
+        return  {...item, label: list.name, path: map.get(item.id)}
       })
-      this.list = _arr
     })
+  },
+  mounted(){
+    let elems =  document.querySelectorAll('img')
   }
 }
 </script>
@@ -104,10 +110,38 @@ export default {
   height: 100vh;
   padding: 0.4rem;
   color: #fff;
-  background-image: url('../assets/imgs/bg_1.png');
+  background-image: url('../assets/imgs/bg_red.png');
   background-size: 100% 100%;
   box-sizing: border-box;
   overflow-y: scroll;
+  header.header-wrapper{
+    position: relative;
+    width: 6.8rem;
+    height: 3rem;
+    margin-top: .6rem;
+    margin-bottom: .2rem;
+    background-image: url(../assets/imgs/img_1.png);
+    background-size: 100%;
+    background-position: center;
+    border-radius: 4px;
+
+    .avatar-box{
+      position: absolute;
+      left: 50%;
+      top: -50%;
+      transform: translateX(-50%) translateY(50%);
+      width: 1.5rem;
+      height: 1.5rem;
+      border: 2px solid #fff;
+      border-radius: 50%;
+      background-color: #fff;
+      overflow: hidden;
+      img{
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
   header.header{
     height: 2rem;
     padding:0.3rem;
@@ -140,7 +174,8 @@ export default {
   .my-notice-bar{
     height: .8rem;
     margin: .3rem 0;
-    background-color: #5846B4;
+    background-color: #9A261C;
+    color: #fff;
   }
 
   .img-box{

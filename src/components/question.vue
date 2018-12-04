@@ -1,6 +1,6 @@
 <template>
   <section class="wrapper flex flex-flow__col">
-    <section class="list-content">
+    <section v-if="isRefresh" class="list-content">
         <ul class="list">
           <li @click="handleClickSubmit(item, index)" v-for="(item, index) in list" :key="index" class="list-item flex flex-flow__col">
             <section class="list-item__name flex flex-justify__between">
@@ -16,9 +16,9 @@
           </li>
         </ul>
     </section>
-    <section v-if="canShowQues == true" class="btn-area">
+    <!-- <section v-if="canShowQues == true" class="btn-area">
       <button  @click="submit" class="btn-submit" type="button" name="button">提交</button>
-    </section>
+    </section> -->
     <van-dialog
       v-model = 'visibleDialog'
       show-cancel-button
@@ -52,7 +52,8 @@ export default {
       temp__index: -1, // 临时保存单击议题的数组下标
 
       Socket: null,
-      canShowQues: true
+      canShowQues: true,
+      isRefresh: true
     }
   },
   methods: {
@@ -61,51 +62,62 @@ export default {
       'handleVildaGrade': 'handleVildaGrade'
     }),
     handleClickSubmit(item, index){
-      this.visibleDialog = true
-      this.temp__index = index
-      this.score = item.score
-      // console.log(item, index)
+      if(item.explainer){
+        this.visibleDialog = true
+        this.temp__index = index
+        this.score = item.score
+       }
     },
     saveOneInfo(){
-      // console.log(this.temp__index, this.score, 'is ok')
-      this.$set(this.list[this.temp__index], 'score', this.score )
-      this.score = ''
+      let local = window.localStorage.getItem('userInfo')
+      local = local && JSON.parse(local)
+      let data = {explainer: local.id, topicId: this.list[this.temp__index].topicId, score: this.score}
+      let reg =  /^(?:0|[1-9][0-9]?|100)$/
+      if(reg.test(data.score)){
+        this.$set(this.list[this.temp__index], 'score', this.score )
+        this.Socket.send(JSON.stringify(data))
+        setTimeout( () => {
+          this.score = ''
+          this.visibleDialog = false
+        }, 1000)
+      }else{
+        this.$toast({
+          type: 3,
+          msg: '请编辑正确的分数'
+        })
+      }
+
     },
     cancelOneInfo(){
       this.score = ''
     },
-    submit(){
-      let local = window.localStorage.getItem('userInfo')
-      local = local && JSON.parse(local)
-      let data = this.list.map(item => {
-        return {explainer: local.id, topicId: item.topicId, score: item.score}
+
+    fetchData(){
+      this.list = []
+      this.isRefresh = false
+      this.getGradeInfo().then(res =>{
+        this.list = res.data
+        this.isRefresh = true
       })
-      this.Socket.send(JSON.stringify(data))
-      this.Socket.close()
-      let storage = localStorage.setItem('canShowQues', false)
-      setTimeout(() => {
-        this.$router.go(-1)
-      }, 1000)
     }
   },
   created(){
+    this.fetchData()
     let local = window.localStorage.getItem('userInfo')
     local = local && JSON.parse(local)
+    let that = this
     this.Socket = new WebSocket(window.socketPath + `meeting/topicWebsocket/${local.id}/${local.orginalJob || 0}`)
-    // console.log(this.Socket)
-    // setTimeout(() => {
-    //   this.canShowQues == 'false' &&
-    //   this.$toast({
-    //     type: 2,
-    //     msg: '您已经参与过本次投票了!'
-    //   })
-    // }, 1000)
-    this.getGradeInfo().then(res =>{
-      this.list = res.data
-    })
+    this.Socket.onmessage = function(e) {
+      if(e.data === 'display'){
+        that.fetchData()
+      }
+    }
     this.handleVildaGrade({userId: local.id}).then(res => {
       this.canShowQues = res.status === 0 ? true : false
     })
+  },
+  distoryed(){
+    this.Socket.close()
   }
 }
 </script>

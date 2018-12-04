@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div ref = "app" id="app">
     <transition
       :name = "path === '/index' ? 'slide-fade' : 'bounce'"
     >
@@ -18,8 +18,17 @@
       }
     },
     methods:{
-
+      resize(){
+        let elem = this.$refs.app
+        setTimeout(() => {
+          elem.style.width = '100vw'
+          elem.style.height = '100vh'
+        }, 300)
+      },
     },
+    mounted(){
+      window.addEventListener('resize', this.resize(), false)
+    }
   }
 </script>
 

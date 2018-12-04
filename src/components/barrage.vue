@@ -187,6 +187,10 @@ export default {
     width: 100%;
     height: 300px;
     border: 1px solid #ccc;
+    background-image: url(http://ifanr-cdn.b0.upaiyun.com/wp-content/uploads/2017/07/maliao.jpg);
+    background-size: 100%;
+    background-position: center center;
+    background-repeat: no-repeat;
 }
 
 .content-input {
