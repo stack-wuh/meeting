@@ -156,9 +156,11 @@ export default {
     height: 1.2rem;
     color: #F28B00;
     font-size: .5rem;
-    background-image: url(../assets/imgs/sprite.png);
-    background-size: 100%;
-    background-position: -2.28rem .46rem;
+    background-image: url(../assets/imgs/icon-tips-2.png);
+    background-size: 80%;
+    background-repeat: no-repeat;
+    background-position: center center;
+
   }
 
   .list-box{
