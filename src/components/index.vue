@@ -1,6 +1,6 @@
 <template>
   <section class="wrapper">
-    <header class="header-wrapper">
+    <header ref="headBox" class="header-wrapper">
       <div @click="jumpToOther({path: '/center'})" class="avatar-box">
         <img :src="info.headPic || defaultAvatar" alt="avatar">
       </div>
@@ -68,7 +68,7 @@ export default {
       'handleIndexInfo':'handleIndexInfo'
     }),
     jumpToOther(item){
-      this.$router.push({path: item.path, query: {tag: item.name, ename: item.ename}})
+      this.$router.push({path: item.path, query: {tag: item.name, ename: item.ename, id: item.id}})
     }
   },
   created(){
@@ -84,6 +84,7 @@ export default {
     ])
     this.handleIndexInfo().then(res => {
       this.info = res.data.info
+      this.$refs.headBox.style.backgroundImage = `url(${res.comStr})`
       this.list = res.data.data.map(item => {
         return  {...item, label: list.name, path: map.get(item.id)}
       })

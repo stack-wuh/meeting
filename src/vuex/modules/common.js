@@ -9,6 +9,7 @@ import {
   download,
   successful,
   validGread,
+  _getMsg
 }
 from '@/api/common.api'
 
@@ -176,6 +177,25 @@ const actions = {
 
       return response
     } catch (err) {
+      throw new Error(err)
+    }
+  },
+
+/**
+ * [hanleGetMsg 获取新增模块的具体内容]
+ * @method hanleGetMsg
+ * @param  {[type]}    context [description]
+ * @param  {[type]}    id      [description]
+ * @return {Promise}           [description]
+ */
+  async hanleGetMsg(context, {
+    id
+  }){
+    try{
+      const response = await _getMsg({id})
+
+      return response
+    }catch(err){
       throw new Error(err)
     }
   }

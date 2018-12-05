@@ -10,6 +10,9 @@
         <div v-if="path === '/seating'" class="img-box">
           <img :src="info" alt="seat">
         </div>
+        <div v-if = "['/order', '/detail', '/location'].includes(path)" class="img-box">
+          <img :src="info.content" alt="other">
+        </div>
         <my-button :disabled="false" @handleClickBtn="DownLoad" v-if="path === '/meettings'" text="下载会议资料" type="danger"></my-button>
       </section>
   </section>
@@ -44,7 +47,8 @@ export default {
     ...mapActions({
       'getMeettingInfo': 'getMeettingInfo',
       'getSeating': 'getSeating',
-      'handleDownload': 'handleDownload'
+      'handleDownload': 'handleDownload',
+      'hanleGetMsg': 'hanleGetMsg'
     }),
     DownLoad(){
       this.handleDownload({materialUrl: this.info.materialUrl})
@@ -70,20 +74,22 @@ export default {
       })
     },
 
-    fetchData({path, name}){
-      console.log(path, name)
+    fetchData({path, id}){
+      this.hanleGetMsg({id}).then(res => {
+        this.info = res.data
+      })
     }
   },
   created(){
     let actions = {
       '/meettings': this.fetchMeetting,
       '/seating': this.fetchSetting,
-      '/location': this.fetchSetting,
-      '/detail': this.fetchSetting,
+      '/location': this.fetchData,
+      '/detail': this.fetchData,
       '/order': this.fetchData
     }
     actions[Object.keys(actions).find(item => this.$route.path === item)]
-      .call(this, {path: this.$route.path, name: 'asd'})
+      .call(this, {path: this.$route.path, id: this.$route.query.id})
   }
 }
 </script>

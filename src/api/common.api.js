@@ -71,3 +71,13 @@ export const validGread = ({
     userId
   }
 })
+
+
+export const _getMsg = ({
+  id
+}) => $http.post({
+  url: window.rootPath + 'index/getMsg.do',
+  data: {
+    id
+  }
+}).catch(err => _catch(err))
