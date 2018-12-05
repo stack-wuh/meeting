@@ -15,7 +15,7 @@
 
 
     <section class="card-list">
-      <section @click="jumpToOther(item)" v-for="(item, index) in list" :key="index" class="card-item">
+      <section v-if="!item.status" @click="jumpToOther(item)" v-for="(item, index) in list" :key="index" class="card-item">
         <img :src="item.picture || item.url" alt="bgImg">
         <span class="card-title">{{item.label || item.name}}</span>
       </section>
@@ -68,7 +68,7 @@ export default {
       'handleIndexInfo':'handleIndexInfo'
     }),
     jumpToOther(item){
-      this.$router.push({path: item.path})
+      this.$router.push({path: item.path, query: {tag: item.name, ename: item.ename}})
     }
   },
   created(){
@@ -76,7 +76,11 @@ export default {
       [1, 'vote'],
       [2, 'question'],
       [3, 'meettings'],
-      [4, 'seating']
+      [4, 'seating'],
+      [5, 'location'],
+      [6, 'detail'],
+      [7, 'order'],
+      [8, 'answer']
     ])
     this.handleIndexInfo().then(res => {
       this.info = res.data.info

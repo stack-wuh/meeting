@@ -1,8 +1,8 @@
 <template>
   <section class="wrapper">
       <header class="header flex flex-flow__col flex-align__center flex-justify__center">
-        <h2>{{path === '/meettings' ? '会议资料' : '座位安排'}}</h2>
-        <p>{{path === '/meettings' ? 'CONEERENCE INFORMATION' : 'SEATING PLAN' }}</p>
+        <h2>{{query.tag}}</h2>
+        <p>{{query.ename}}</p>
       </header>
       <section class="content flex flex-flow__col">
         <h3 v-if="path === '/meettings'" class="content__title">2018年东风LEAR年会</h3>
@@ -35,6 +35,9 @@ export default {
   computed: {
     path(){
       return this.$route.path
+    },
+    query(){
+      return this.$route.query
     }
   },
   methods: {
@@ -46,23 +49,41 @@ export default {
     DownLoad(){
       this.handleDownload({materialUrl: this.info.materialUrl})
     },
+    /**
+     * [fetchMeetting 回去会议资料]
+     * @method fetchMeetting
+     * @return {[type]}      [description]
+     */
     fetchMeetting(){
       this.getMeettingInfo().then(res => {
         this.info = res.data
       })
     },
+    /**
+     * [fetchSetting 获取座位信息]
+     * @method fetchSetting
+     * @return {[type]}     [description]
+     */
     fetchSetting(){
       this.getSeating().then(res => {
         this.info = res.data
       })
+    },
+
+    fetchData({path, name}){
+      console.log(path, name)
     }
   },
   created(){
     let actions = {
       '/meettings': this.fetchMeetting,
-      '/seating': this.fetchSetting
+      '/seating': this.fetchSetting,
+      '/location': this.fetchSetting,
+      '/detail': this.fetchSetting,
+      '/order': this.fetchData
     }
-    actions[Object.keys(actions).find(item => this.$route.path === item)].call(this)
+    actions[Object.keys(actions).find(item => this.$route.path === item)]
+      .call(this, {path: this.$route.path, name: 'asd'})
   }
 }
 </script>

@@ -48,7 +48,7 @@ export default new Router({
     },
     {
       path: '/meettings',
-      alias: ['/seating'],
+      alias: ['/seating', '/order', '/location', '/detail'],
       component: () =>
         import('@/components/meettings')
     },
