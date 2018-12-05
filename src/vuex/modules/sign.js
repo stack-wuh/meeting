@@ -72,7 +72,7 @@ const actions = {
       const response = await getIdentifyCode({
         phone
       })
-      document.cookie = `JSESSIONID = ${response.data.sessionId}`
+      // document.cookie = `JSESSIONID = ${response.data.sessionId}`
       return response
     } catch (err) {
       throw new Error(err)

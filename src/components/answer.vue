@@ -1,10 +1,11 @@
 <template>
-  <section  class="wrapper">
+  <section class="wrapper">
       <header class="header flex flex-justify__center">
         <strong>{{info.sequenceNum || 0}}/{{info.total || 0}}</strong>
       </header>
       <section class="list-box">
-        <section class="head flex flex-justify__end">
+        <section class="head flex flex-justify__between">
+            <span class="head__timer">{{count}}s</span>
             <img class="head__star" src="../assets/imgs/icon-star.png" alt="star">
             <span class="head__num flex-self__end">{{info.count || 0}}人</span>
         </section>
@@ -28,11 +29,12 @@
         </section>
       </section>
 
-      <section :class="['clock-wrapper',
+      <!-- <section :class="['clock-wrapper',
         count > 0 ? 'clock-wrapper__active' : 'clock-wrapper__undo',
-        count > 5 ? 'clock-wrapper__info-text' : 'clock-wrapper__danger-text']">
+        count > 5 ? 'clock-wrapper__info-text' : 'clock-wrapper__danger-text',
+        ]">
           {{count}}
-      </section>
+      </section> -->
 
       <my-dialog
         :visibleDialog="visibleDialog"
@@ -54,7 +56,7 @@
         </div>
       </my-dialog>
   </section>
-  <!-- <section v-else  class="un-wrapper">
+  <!-- <section class="un-wrapper">
     <div class="tips-text">
       等待答题
     </div>
@@ -85,15 +87,31 @@ export default {
       count: 30, //答题倒计时 -- 默认30
     }
   },
+  watch:{
+    count(){
+      console.log(this.canGo)
+      if(this.info.sequenceNum < this.info.total){
+        if(this.count <= 0 && !this.canGo){
+          this.$toast({
+            type: 3,
+            msg: '您已超时'
+          })
+          this.Socket.send('wrong')
+        }
+      }
+    }
+  },
   methods: {
     ...mapActions({
       'addSuccess': 'addSuccess'
     }),
     clockNow(){
+      let successIndex = this.info.options.indexOf(this.info.rightAnswer)
       if(timer) clearInterval(timer)
       let timer = setInterval(() => {
         this.count --
         if(this.count <= 0){
+          this.isSuccess = successIndex
           clearInterval(timer)
         }
       }, 1000)
@@ -102,12 +120,12 @@ export default {
       this.isChecked = index
       let successIndex = this.info.options.indexOf(this.info.rightAnswer)
       if(index !== successIndex){
+        this.visibleDialog = true
         this.Socket.send('wrong')
       }
       setTimeout(() => {
         this.isChecked = -1
         this.isSuccess = successIndex
-        this.visibleDialog = true
         this.canGo = successIndex === index ? true : false
       }, 1000)
     },
@@ -132,16 +150,22 @@ export default {
     let local = window.localStorage.getItem('userInfo')
     local = local && JSON.parse(local)
     this.Socket = new WebSocket(window.socketPath + `meeting/passWebsocket/${local.id}/0`)
-    this.Socket.onmessage = function(e){
+    this.Socket.onmessage = e => {
       console.log(e)
-      let data = JSON.parse(e.data)
-      let options = data && [data.optionA, data.optionB, data.optionC, data.optionD]
-      that.info = {...data, options}
+      let data = e.data === 'pass' ? {} : JSON.parse(e.data)
+      if(e.data != 'pass'){
+        let options = data && [data.optionA, data.optionB, data.optionC, data.optionD]
+        that.info = {...data, options}
+        this.count = data.time || 30
+        this['clockNow'].call(this)
+      }
       that.isChecked = -1
       that.isSuccess = -1
       that.visibleDialog = false
     }
-    this.clockNow()
+  },
+  distoryed(){
+    this.Socket.close()
   }
 }
 </script>
@@ -160,7 +184,6 @@ export default {
     background-size: 80%;
     background-repeat: no-repeat;
     background-position: center center;
-
   }
 
   .list-box{
@@ -177,6 +200,19 @@ export default {
       background-color: #eee;
       border-top-left-radius: 4px;
       border-top-right-radius: 4px;
+
+      .head__timer{
+        margin-left: .3rem;
+        font-size: .24rem;
+      }
+      .head__timer:before{
+          content: '';
+          padding: .2rem;
+          background-image: url(../assets/imgs/icon-timer.png);
+          background-size: 70%;
+          background-repeat: no-repeat;
+          background-position: center center;
+      }
 
       .head__num{
         margin-right: .3rem;

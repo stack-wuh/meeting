@@ -86,6 +86,8 @@ const checkStatus = response => {
   return response.data
 }
 
+let  userInfo = window.localStorage.getItem('userInfo')
+userInfo = userInfo && JSON.parse(userInfo)
 
 export default {
   post({
@@ -96,7 +98,7 @@ export default {
       method: 'post',
       // baseURL: window.rootPath,
       url,
-      data: qs.stringify(data),
+      data: qs.stringify({...data, phone: userInfo.phone}),
       timeout: 10000,
       crossDomain: true,
       headers: {
