@@ -1,66 +1,69 @@
 <template>
   <section class="wrapper">
-      <header class="header flex flex-justify__center">
-        <strong>{{info.sequenceNum || 0}}/{{info.total || 0}}</strong>
-      </header>
-      <section class="list-box">
-        <section class="head flex flex-justify__between">
-            <span class="head__timer">{{count}}s</span>
-            <img class="head__star" src="../assets/imgs/icon-star.png" alt="star">
-            <span class="head__num flex-self__end">{{info.count || 0}}人</span>
+    <section v-if="isShowPanel" class="wrapper">
+        <header class="header flex flex-justify__center">
+          <strong>{{info.sequenceNum || 0}}/{{info.total || 0}}</strong>
+        </header>
+        <section class="list-box">
+          <section class="head flex flex-justify__between">
+              <span class="head__timer">{{count}}s</span>
+              <img class="head__star" src="../assets/imgs/icon-star.png" alt="star">
+              <span class="head__num flex-self__end">{{info.count || 0}}人</span>
+          </section>
+          <section v-if="info.status === 0" class="list">
+            <h4 class="list__title">{{info.content || '标题'}}</h4>
+            <ul class="list__item">
+                <li @click="handleSubmit(info.optionA, 0)" :class="[isChecked == 0 ? 'item item__active' : 'item', isSuccess == 0 ? 'item item__success' : 'item']">A. {{info.optionA}}</li>
+                <li @click="handleSubmit(info.optionB, 1)" :class="[isChecked == 1 ? 'item item__active' : 'item', isSuccess == 1 ? 'item item__success' : 'item']">B. {{info.optionB}}</li>
+                <li @click="handleSubmit(info.optionC, 2)" :class="[isChecked == 2 ? 'item item__active' : 'item', isSuccess == 2 ? 'item item__success' : 'item']">C. {{info.optionC}}</li>
+                <li @click="handleSubmit(info.optionD, 3)" :class="[isChecked == 3 ? 'item item__active' : 'item', isSuccess == 3 ? 'item item__success' : 'item']">D. {{info.optionD}}</li>
+            </ul>
+          </section>
+          <section v-if="info.status === 1" class="list">
+            <h4 class="list__title">{{info.content || '标题'}}</h4>
+            <ul class="list__item">
+                <li :class="[isSuccess == 0 ? 'item item__success' : 'item']">A. {{info.optionA}}</li>
+                <li :class="[isSuccess == 1 ? 'item item__success' : 'item']">B. {{info.optionB}}</li>
+                <li :class="[isSuccess == 2 ? 'item item__success' : 'item']">C. {{info.optionC}}</li>
+                <li :class="[isSuccess == 3 ? 'item item__success' : 'item']">D. {{info.optionD}}</li>
+            </ul>
+          </section>
         </section>
-        <section v-if="info.status === 0" class="list">
-          <h4 class="list__title">{{info.content || '标题'}}</h4>
-          <ul class="list__item">
-              <li @click="handleSubmit(info.optionA, 0)" :class="[isChecked == 0 ? 'item item__active' : 'item', isSuccess == 0 ? 'item item__success' : 'item']">A. {{info.optionA}}</li>
-              <li @click="handleSubmit(info.optionB, 1)" :class="[isChecked == 1 ? 'item item__active' : 'item', isSuccess == 1 ? 'item item__success' : 'item']">B. {{info.optionB}}</li>
-              <li @click="handleSubmit(info.optionC, 2)" :class="[isChecked == 2 ? 'item item__active' : 'item', isSuccess == 2 ? 'item item__success' : 'item']">C. {{info.optionC}}</li>
-              <li @click="handleSubmit(info.optionD, 3)" :class="[isChecked == 3 ? 'item item__active' : 'item', isSuccess == 3 ? 'item item__success' : 'item']">D. {{info.optionD}}</li>
-          </ul>
-        </section>
-        <section v-if="info.status === 1" class="list">
-          <h4 class="list__title">{{info.content || '标题'}}</h4>
-          <ul class="list__item">
-              <li :class="[isSuccess == 0 ? 'item item__success' : 'item']">A. {{info.optionA}}</li>
-              <li :class="[isSuccess == 1 ? 'item item__success' : 'item']">B. {{info.optionB}}</li>
-              <li :class="[isSuccess == 2 ? 'item item__success' : 'item']">C. {{info.optionC}}</li>
-              <li :class="[isSuccess == 3 ? 'item item__success' : 'item']">D. {{info.optionD}}</li>
-          </ul>
-        </section>
-      </section>
 
-      <!-- <section :class="['clock-wrapper',
-        count > 0 ? 'clock-wrapper__active' : 'clock-wrapper__undo',
-        count > 5 ? 'clock-wrapper__info-text' : 'clock-wrapper__danger-text',
-        ]">
-          {{count}}
-      </section> -->
+        <!-- <section :class="['clock-wrapper',
+          count > 0 ? 'clock-wrapper__active' : 'clock-wrapper__undo',
+          count > 5 ? 'clock-wrapper__info-text' : 'clock-wrapper__danger-text',
+          ]">
+            {{count}}
+        </section> -->
 
-      <my-dialog
-        :visibleDialog="visibleDialog"
-        title=""
-        :canShowConfirmButton="false"
-        :canShowCancelButton="false"
-        confirmButtonText="继续闯关"
-      >
-        {{info.count}} -- {{info.sequenceNum}}
-        <div class="my-dialog-wrapper" slot="text">
-          <div class="my-dialog-img">
-            <img :src="successImg" alt="logo" style="width: 100%; height: 100%;">
+        <my-dialog
+          :visibleDialog="visibleDialog"
+          title=""
+          :canShowConfirmButton="false"
+          :canShowCancelButton="false"
+          confirmButtonText="继续闯关"
+        >
+          {{info.count}} -- {{info.sequenceNum}}
+          <div class="my-dialog-wrapper" slot="text">
+            <div class="my-dialog-img">
+              <img :src="successImg" alt="logo" style="width: 100%; height: 100%;">
+            </div>
+            <p class="dialog__sub">{{canGo ? '恭喜你' : '很遗憾'}}</p>
+            <p v-if="info.sequenceNum !== info.total" class="dialog__title">{{canGo ? '回答正确' : '闯关失败'}}</p>
+            <p v-if="info.sequenceNum == info.total" class="dialog__title">{{canGo ? '闯关成功' : '闯关失败'}}</p>
+            <van-button v-if="info.sequenceNum == info.total" @click="jump2Other" type="primary" class="btn__submit">回到首页</van-button>
+            <van-button v-if="info.sequenceNum !== info.total" @click="visibleDialog = false" type="primary" class="btn__submit">{{canGo ? '继续闯关' : '继续观战'}}</van-button>
           </div>
-          <p class="dialog__sub">{{canGo ? '恭喜你' : '很遗憾'}}</p>
-          <p v-if="info.sequenceNum !== info.total" class="dialog__title">{{canGo ? '回答正确' : '闯关失败'}}</p>
-          <p v-if="info.sequenceNum == info.total" class="dialog__title">{{canGo ? '闯关成功' : '闯关失败'}}</p>
-          <van-button v-if="info.sequenceNum == info.total" @click="jump2Other" type="primary" class="btn__submit">回到首页</van-button>
-          <van-button v-if="info.sequenceNum !== info.total" @click="visibleDialog = false" type="primary" class="btn__submit">{{canGo ? '继续闯关' : '继续观战'}}</van-button>
-        </div>
-      </my-dialog>
+        </my-dialog>
+    </section>
+    <section v-if="!isShowPanel" class="un-wrapper">
+      <div class="tips-text">
+        等待答题
+      </div>
+    </section>
   </section>
-  <!-- <section class="un-wrapper">
-    <div class="tips-text">
-      等待答题
-    </div>
-  </section> -->
+
 </template>
 <script>
 import {mapActions} from 'vuex'
@@ -85,6 +88,7 @@ export default {
       canGo: false, // 是否答题成功
 
       count: 30, //答题倒计时 -- 默认30
+      isShowPanel: false , // 是否展示答题面板
     }
   },
   watch:{
@@ -159,6 +163,7 @@ export default {
         this.count = data.time || 30
         this['clockNow'].call(this)
       }
+      this.isShowPanel = true
       that.isChecked = -1
       that.isSuccess = -1
       that.visibleDialog = false
