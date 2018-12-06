@@ -88,8 +88,10 @@ const checkStatus = response => {
 
 let  userInfo = window.localStorage.getItem('userInfo')
 userInfo = userInfo && JSON.parse(userInfo)
-let result = userInfo.exprie - (+new Date().getTime()) > 0 ? true : false
-
+let result = false
+if(userInfo){
+  result = userInfo.exprie - (+new Date().getTime()) > 0 ? true : false
+}
 const ObjNotNull = (obj) => {
   let _obj = {}
   Object.keys(obj).map(oo => {
