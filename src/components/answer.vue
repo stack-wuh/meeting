@@ -37,7 +37,6 @@
           :canShowCancelButton="false"
           confirmButtonText="继续闯关"
         >
-          {{info.count}} -- {{info.sequenceNum}}
           <div class="my-dialog-wrapper" slot="text">
             <div class="my-dialog-img">
               <img :src="successImg" alt="logo" style="width: 100%; height: 100%;">
@@ -50,6 +49,8 @@
             <van-button v-if="info.sequenceNum !== info.total" @click="visibleDialog = false" type="primary" class="btn__submit">{{canGo ? '继续闯关' : '继续观战'}}</van-button>
           </div>
         </my-dialog>
+
+
     </section>
 
     <section v-if="!isShowPanel" class="un-wrapper">
@@ -99,7 +100,7 @@ export default {
           this.Socket.send('wrong')
         }
       }
-      if(this.info.total <= this.info.sequenceNum && this.info.status == 0 && this.count <= 0){
+      if(this.info.total <= this.info.sequenceNum && this.count <= 0){
         this.visibleDialog = true
       }
     }
@@ -116,7 +117,7 @@ export default {
         if(this.count <= 0){
           this.count = 0
           this.isSuccess = successIndex
-          clearInterval(timer)
+          clearInterval(this.timer)
         }
       }, 1000)
     },
@@ -157,7 +158,6 @@ export default {
     this.Socket.onmessage = e => {
       console.log(e)
       let data = e.data === 'pass' ? {} : JSON.parse(e.data)
-      if(this.timer)  clearInterval(this.timer)
       console.log(data)
       if(e.data != 'pass'){
         let options = data && [data.optionA, data.optionB, data.optionC, data.optionD]
@@ -166,9 +166,9 @@ export default {
         this['clockNow'].call(this)
       }
       this.isShowPanel = true // 展示答题区域
-      that.isChecked = -1 // 清除选择答案
-      that.isSuccess = -1 // 清除正确答案
-      that.visibleDialog = false
+      this.isChecked = -1 // 清除选择答案
+      this.isSuccess = -1 // 清除正确答案
+      this.visibleDialog = false
     }
   },
   distoryed(){
