@@ -8,7 +8,7 @@
           </div>
           <div class="list__value">
             <div v-if="item.type === 'img'" class="list__avatar-box">
-              <img class="list__avatar" v-if="item.type === 'img'" :src="item.value" alt="avatar">
+              <img class="list__avatar" v-if="item.type === 'img'" :src="info[item.field] || item.value" alt="avatar">
             </div>
             <span v-else class="list__text">{{info[item.field] || item.value}}</span>
           </div>
