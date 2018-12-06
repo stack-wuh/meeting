@@ -161,12 +161,14 @@ export default {
         that.info = {...data, options}
         this.count = data.time || 30
         this['clockNow'].call(this)
+        this.isShowPanel = true // 展示答题区域
+        this.isChecked = -1 // 清除选择答案
+        this.isSuccess = -1 // 清除正确答案
+        this.isClick = true // 允许再次点击
+        this.visibleDialog = false  // 关掉dialog
+      }else {
+        this.Socket.close()
       }
-      this.isShowPanel = true // 展示答题区域
-      this.isChecked = -1 // 清除选择答案
-      this.isSuccess = -1 // 清除正确答案
-      this.isClick = true // 允许再次点击
-      this.visibleDialog = false
     }
   },
   distoryed(){
