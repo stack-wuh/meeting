@@ -1,4 +1,4 @@
-import $http from '@/utils/axios'
+ import $http from '@/utils/axios'
 import {
   _catch
 } from '@/utils/global'
@@ -32,8 +32,13 @@ export const getIdentifyCode = ({
 }).catch(err => _catch(err))
 
 
-export const getIndexInfo = () => $http.post({
-  url: window.rootPath + '/index/init.do'
+export const getIndexInfo = ({
+  phone
+}) => $http.post({
+  url: window.rootPath + '/index/init.do',
+  data: {
+    phone
+  }
 }).catch(err => _catch(err))
 
 export const vliadVote = ({

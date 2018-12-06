@@ -85,7 +85,11 @@ const actions = {
    */
   async handleIndexInfo() {
     try {
-      const response = await getIndexInfo()
+      let userInfo = window.localStorage.getItem('userInfo')
+      userInfo = userInfo && JSON.parse(userInfo)
+      const response = await getIndexInfo({
+        phone: userInfo.phone ? userInfo.phone: ''
+      })
       return response
     } catch (err) {
       throw new Error(err)
