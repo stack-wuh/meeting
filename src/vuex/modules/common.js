@@ -9,7 +9,8 @@ import {
   download,
   successful,
   validGread,
-  _getMsg
+  _getMsg,
+  _getBgPic
 }
 from '@/api/common.api'
 
@@ -196,6 +197,21 @@ const actions = {
 
       return response
     }catch(err){
+      throw new Error(err)
+    }
+  },
+
+  /**
+   * [handleGetBackground 获取弹幕背景图片]
+   * @method handleGetBackground
+   * @return {Promise}           [description]
+   */
+  async handleGetBackground(){
+    try{
+      const response = await _getBgPic()
+
+      return response
+    }catch(err) {
       throw new Error(err)
     }
   }

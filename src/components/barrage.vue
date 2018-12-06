@@ -1,7 +1,7 @@
 <template>
   <section class="wrapper">
     <section id="print" ref="print">
-      <div id="content" class="content"></div>
+      <div ref = "content" id="content" class="content"></div>
       <div class="content-input">
           <input id="text" type="text">
           <button id="send">发送</button>
@@ -11,6 +11,7 @@
   </section>
 </template>
 <script>
+import {mapActions} from 'vuex'
 export default {
   props: {},
   name: '',
@@ -27,6 +28,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      'handleGetBackground': 'handleGetBackground'
+    }),
     translateScreen(){
       let width = document.documentElement.clientWidth,
           height = document.documentElement.clientHeight,
@@ -168,6 +172,10 @@ export default {
   },
   mounted(){
     this.translateScreen()
+    this.handleGetBackground().then(res => {
+      let elem = this.$refs.content
+      elem.style.backgroundImage = `url(${res.data})`
+    })
   },
   distoryed(){
     this.Socket.close()

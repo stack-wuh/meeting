@@ -72,7 +72,6 @@ export const validGread = ({
   }
 })
 
-
 export const _getMsg = ({
   id
 }) => $http.post({
@@ -80,4 +79,8 @@ export const _getMsg = ({
   data: {
     id
   }
+}).catch(err => _catch(err))
+
+export const _getBgPic = () => $http.post({
+  url: window.rootPath + '/index/getbgPic.do'
 }).catch(err => _catch(err))
