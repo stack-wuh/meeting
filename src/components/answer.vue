@@ -30,13 +30,6 @@
           </section>
         </section>
 
-        <!-- <section :class="['clock-wrapper',
-          count > 0 ? 'clock-wrapper__active' : 'clock-wrapper__undo',
-          count > 5 ? 'clock-wrapper__info-text' : 'clock-wrapper__danger-text',
-          ]">
-            {{count}}
-        </section> -->
-
         <my-dialog
           :visibleDialog="visibleDialog"
           title=""
@@ -50,8 +43,9 @@
               <img :src="successImg" alt="logo" style="width: 100%; height: 100%;">
             </div>
             <p class="dialog__sub">{{canGo ? '恭喜你' : '很遗憾'}}</p>
-            <p v-if="info.sequenceNum !== info.total" class="dialog__title">{{canGo ? '回答正确' : '闯关失败'}}</p>
-            <p v-if="info.sequenceNum == info.total" class="dialog__title">{{canGo ? '闯关成功' : '闯关失败'}}</p>
+            <!-- <p v-if="info.sequenceNum !== info.total" class="dialog__title">{{canGo ? '回答正确' : '闯关失败'}}</p> -->
+            <!-- <p v-if="info.sequenceNum == info.total" class="dialog__title">{{canGo ? '闯关成功' : '闯关失败'}}</p> -->
+            <p v-if="info.sequenceNum == info.total && canGo" class="dialog__title">闯关成功</p>
             <van-button v-if="info.sequenceNum == info.total" @click="jump2Other" type="primary" class="btn__submit">回到首页</van-button>
             <van-button v-if="info.sequenceNum !== info.total" @click="visibleDialog = false" type="primary" class="btn__submit">{{canGo ? '继续闯关' : '继续观战'}}</van-button>
           </div>
@@ -63,6 +57,7 @@
         等待答题
       </div>
     </section>
+
   </section>
 
 </template>
@@ -90,6 +85,7 @@ export default {
 
       count: 30, //答题倒计时 -- 默认30
       isShowPanel: false , // 是否展示答题面板
+      timer: null , // 倒计时的定时器ID
     }
   },
   watch:{
@@ -103,6 +99,9 @@ export default {
           this.Socket.send('wrong')
         }
       }
+      if(this.info.total <= this.info.sequenceNum && this.info.status == 0 && this.count <= 0){
+        this.visibleDialog = true
+      }
     }
   },
   methods: {
@@ -111,8 +110,8 @@ export default {
     }),
     clockNow(){
       let successIndex = this.info.options.indexOf(this.info.rightAnswer)
-      if(timer) clearInterval(timer)
-      let timer = setInterval(() => {
+      if(this.timer) clearInterval(this.timer)
+      this.timer = setInterval(() => {
         this.count --
         if(this.count <= 0){
           this.count = 0
@@ -124,6 +123,7 @@ export default {
     handleSubmit(option, index){
       this.isChecked = index
       let successIndex = this.info.options.indexOf(this.info.rightAnswer)
+      this.canGo = successIndex === index ? true : false
       if(index !== successIndex){
         this.visibleDialog = true
         this.Socket.send('wrong')
@@ -131,7 +131,6 @@ export default {
       setTimeout(() => {
         this.isChecked = -1
         this.isSuccess = successIndex
-        this.canGo = successIndex === index ? true : false
       }, 1000)
     },
     jump2Other(){
@@ -154,19 +153,21 @@ export default {
     let that = this
     let local = window.localStorage.getItem('userInfo')
     local = local && JSON.parse(local)
-    this.Socket = new WebSocket(window.socketPath + `meeting/passWebsocket/${local.id}/${local.orginalJob || 0}`)
+    this.Socket = new WebSocket(window.socketPath + `meeting/passWebsocket/${local.id}/0`)
     this.Socket.onmessage = e => {
       console.log(e)
       let data = e.data === 'pass' ? {} : JSON.parse(e.data)
+      if(this.timer)  clearInterval(this.timer)
+      console.log(data)
       if(e.data != 'pass'){
         let options = data && [data.optionA, data.optionB, data.optionC, data.optionD]
         that.info = {...data, options}
         this.count = data.time || 30
         this['clockNow'].call(this)
       }
-      this.isShowPanel = true
-      that.isChecked = -1
-      that.isSuccess = -1
+      this.isShowPanel = true // 展示答题区域
+      that.isChecked = -1 // 清除选择答案
+      that.isSuccess = -1 // 清除正确答案
       that.visibleDialog = false
     }
   },

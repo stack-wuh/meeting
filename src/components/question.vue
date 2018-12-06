@@ -93,8 +93,13 @@ export default {
     },
 
     fetchData(){
+      let local = window.localStorage.getItem('userInfo')
+      local = local && JSON.parse(local)
       this.list = []
       this.isRefresh = false
+      this.handleVildaGrade({userId: local.id}).then(res => {
+        this.canShowQues = res.status === 0 ? true : false
+      })
       this.getGradeInfo().then(res =>{
         this.list = res.data
         this.isRefresh = true
@@ -108,6 +113,7 @@ export default {
     let that = this
     this.Socket = new WebSocket(window.socketPath + `meeting/topicWebsocket/${local.id}/${local.orginalJob || 0}`)
     this.Socket.onmessage = function(e) {
+      // console.log(e)
       if(e.data === 'display'){
         that.fetchData()
       }

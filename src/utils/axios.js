@@ -94,6 +94,7 @@ if(userInfo){
 }
 const ObjNotNull = (obj) => {
   let _obj = {}
+  // console.log(obj)
   Object.keys(obj).map(oo => {
     if(obj[oo]) _obj[oo] = obj[oo]
   })

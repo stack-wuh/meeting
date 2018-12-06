@@ -45,3 +45,4 @@ window.rootPath = '/meeting'
 // window.socketPath = 'ws://47.105.94.178:8081/'
 //线下webSocket地址
 window.socketPath = 'ws://192.168.10.117:8081/'
+// window.socketPath = 'ws://192.168.10.108:8085/'
