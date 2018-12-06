@@ -62,15 +62,12 @@ export default {
     ])
     this.handleIndexInfo().then(res => {
       this.info = res.data.info
-      this.$refs.headBox.style.backgroundImage = `url(${res.comStr})`
+      this.$refs.headBox.style.backgroundImage = res.comStr && `url(${res.comStr})`
       this.list = res.data.data.map(item => {
         return  {...item, path: map.get(item.id)}
       })
     })
   },
-  mounted(){
-    let elems =  document.querySelectorAll('img')
-  }
 }
 </script>
 <style lang="less" scoped>

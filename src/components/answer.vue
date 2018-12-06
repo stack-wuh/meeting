@@ -39,7 +39,7 @@
         >
           <div class="my-dialog-wrapper" slot="text">
             <div class="my-dialog-img">
-              <img :src="successImg" alt="logo" style="width: 100%; height: 100%;">
+              <img :src="canGo ? successImg : errorImg" alt="logo" style="width: 100%; height: 100%;">
             </div>
             <p class="dialog__sub">{{canGo ? '恭喜你' : '很遗憾'}}</p>
             <!-- <p v-if="info.sequenceNum !== info.total" class="dialog__title">{{canGo ? '回答正确' : '闯关失败'}}</p> -->
@@ -87,18 +87,17 @@ export default {
       count: 30, //答题倒计时 -- 默认30
       isShowPanel: false , // 是否展示答题面板
       timer: null , // 倒计时的定时器ID
+      isClick: true, // 允许
     }
   },
   watch:{
     count(){
-      if(this.info.sequenceNum < this.info.total){
-        if(this.count <= 0 && !this.canGo){
-          this.$toast({
-            type: 3,
-            msg: '您已超时'
-          })
-          this.Socket.send('wrong')
-        }
+      if(this.info.status == 0 && this.count <=0 && this.isChecked < 0){
+        this.$toast({
+          type: 3,
+          msg: '操作超时,只能观战!'
+        })
+        this.Socket.send('wrong')
       }
       if(this.info.total <= this.info.sequenceNum && this.count <= 0){
         this.visibleDialog = true
@@ -122,29 +121,27 @@ export default {
       }, 1000)
     },
     handleSubmit(option, index){
-      this.isChecked = index
-      let successIndex = this.info.options.indexOf(this.info.rightAnswer)
-      this.canGo = successIndex === index ? true : false
-      if(index !== successIndex){
-        this.visibleDialog = true
-        this.Socket.send('wrong')
+      if(this.isClick){
+        this.isChecked = index
+        let successIndex = this.info.options.indexOf(this.info.rightAnswer)
+        let local = window.localStorage.getItem('userInfo')
+        local = local && JSON.parse(local)
+        let data = {
+          userId: local.id,
+          meetingId: this.info.meetingId
+        }
+        this.canGo = successIndex === index ? true : false
+        if(index !== successIndex && this.isClick){
+          this.visibleDialog = true
+          this.Socket.send('wrong')
+        }
+        if(this.info.status == 0 && this.info.sequenceNum >= this.info.total){
+          this.addSuccess(data)
+        }
       }
-      setTimeout(() => {
-        this.isChecked = -1
-        this.isSuccess = successIndex
-      }, 1000)
+      this.isClick = false
     },
     jump2Other(){
-      let local = window.localStorage.getItem('userInfo')
-      local = local && JSON.parse(local)
-      this.visibleDialog = false
-      let data = {
-        userId: local.id,
-        meetingId: this.info.meetingId
-      }
-      if(this.canGo){
-        this.addSuccess(data)
-      }
       setTimeout(() => {
         this.$router.push({path: '/index'})
       }, 1000)
@@ -168,6 +165,7 @@ export default {
       this.isShowPanel = true // 展示答题区域
       this.isChecked = -1 // 清除选择答案
       this.isSuccess = -1 // 清除正确答案
+      this.isClick = true // 允许再次点击
       this.visibleDialog = false
     }
   },
