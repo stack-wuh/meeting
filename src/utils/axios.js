@@ -88,6 +88,15 @@ const checkStatus = response => {
 
 let  userInfo = window.localStorage.getItem('userInfo')
 userInfo = userInfo && JSON.parse(userInfo)
+let result = userInfo.exprie - (+new Date().getTime()) > 0 ? true : false
+
+const ObjNotNull = (obj) => {
+  let _obj = {}
+  Object.keys(obj).map(oo => {
+    if(obj[oo]) _obj[oo] = obj[oo]
+  })
+  return _obj
+}
 
 export default {
   post({
@@ -98,7 +107,7 @@ export default {
       method: 'post',
       // baseURL: window.rootPath,
       url,
-      data: qs.stringify({...data, phone: userInfo.phone}),
+      data: qs.stringify(ObjNotNull({phone: result ? userInfo.phone : '', ...data})),
       timeout: 10000,
       crossDomain: true,
       headers: {

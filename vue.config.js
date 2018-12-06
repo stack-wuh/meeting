@@ -17,7 +17,7 @@ module.exports = {
     https: false,
     proxy: {
       '/meeting': {
-        target: 'http://192.168.10.107:8085/meeting/',
+        target: 'http://192.168.10.108:8085/meeting/',
         changeOrigin: true,
         pathRewrite: {
           '^/meeting': ''
