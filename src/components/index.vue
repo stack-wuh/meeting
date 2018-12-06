@@ -25,28 +25,6 @@
 </template>
 <script>
 import {mapActions} from 'vuex'
-const list = [
-  {
-    label: '部门投票',
-    url: require('../assets/imgs/bg_3.png'),
-    path: '/vote',
-  },
-  {
-    label: '议题打分',
-    url: require('../assets/imgs/bg_4.png'),
-    path: '/question',
-  },
-  {
-    label: '会议资料',
-    url: require('../assets/imgs/bg_5.png'),
-    path: '/meettings',
-  },
-  {
-    label: '座位安排',
-    url: require('../assets/imgs/bg_6.png'),
-    path: '/seating',
-  },
-]
 export default {
   props: {},
   name: '',
@@ -54,7 +32,7 @@ export default {
   data(){
     return {
       msgIcon: require('@/assets/imgs/icon-tip-1.png'),
-      list,
+      list: [],
       info: {},
       defaultAvatar: require('@/assets/imgs/avatar.png'),
       defaultBg: require('@/assets/imgs/bg_2.png'),
@@ -86,7 +64,7 @@ export default {
       this.info = res.data.info
       this.$refs.headBox.style.backgroundImage = `url(${res.comStr})`
       this.list = res.data.data.map(item => {
-        return  {...item, label: list.name, path: map.get(item.id)}
+        return  {...item, path: map.get(item.id)}
       })
     })
   },
