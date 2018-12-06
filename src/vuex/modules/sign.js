@@ -88,7 +88,7 @@ const actions = {
       let userInfo = window.localStorage.getItem('userInfo')
       userInfo = userInfo && JSON.parse(userInfo)
       const response = await getIndexInfo({
-        phone: userInfo.phone ? userInfo.phone: ''
+        phone: userInfo && userInfo.phone
       })
       return response
     } catch (err) {

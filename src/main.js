@@ -20,7 +20,7 @@ router.beforeEach((to, from, next) => {
   const name = to.name
   if(name !== 'login'){
     if(exprie){
-      _signIn({phone: userInfo.phone}).then(res => {
+      _signIn({phone: userInfo && userInfo.phone}).then(res => {
         window.localStorage.setItem('userInfo', JSON.stringify({...res.data, exprie: +new Date() + (60 * 60 * 4 * 1000)}))
       })
       next()
