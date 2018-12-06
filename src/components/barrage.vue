@@ -174,7 +174,7 @@ export default {
     this.translateScreen()
     this.handleGetBackground().then(res => {
       let elem = this.$refs.content
-      elem.style.backgroundImage = `url(${res.data})`
+      elem.style.backgroundImage = res.data && `url(${res.data})`
     })
   },
   distoryed(){
