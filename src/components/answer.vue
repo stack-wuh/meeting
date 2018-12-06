@@ -57,6 +57,7 @@
           </div>
         </my-dialog>
     </section>
+    
     <section v-if="!isShowPanel" class="un-wrapper">
       <div class="tips-text">
         等待答题

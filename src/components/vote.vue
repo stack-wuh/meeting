@@ -82,18 +82,17 @@ export default {
       const voteing = () => {
         this.$dialog.confirm({
           title: '提示',
-          message: '请选择一个部门后提交',
+          message: '请选择三个部门后提交',
           showCancelButton: false
         }).then(() => {
           that.handleCloseDialog()
         })
       }
       let actions = new Map([
-        [{canVote: true, result: /1/}, canVoteing],
-        [{canVote: true, result: /0/}, voteing],
-        [{canVote: true, result: /[2-]/}, voteing]
+        [{canVote: true, result: /3/}, canVoteing],
+        [{canVote: true, result: /[0-2]/}, voteing]
       ])
-      let action = [...actions].filter(([key, value]) => (key.canVote === this.canVote && key.result.test(ids)))
+      let action = [...actions].filter(([key, value]) => (key.canVote === this.canVote && key.result.test(ids.length)))
       action.forEach(([key, value]) => {
         value.call(this)
       })
