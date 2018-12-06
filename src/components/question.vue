@@ -16,9 +16,6 @@
           </li>
         </ul>
     </section>
-    <!-- <section v-if="canShowQues == true" class="btn-area">
-      <button  @click="submit" class="btn-submit" type="button" name="button">提交</button>
-    </section> -->
     <van-dialog
       v-model = 'visibleDialog'
       show-cancel-button
@@ -62,7 +59,7 @@ export default {
       'handleVildaGrade': 'handleVildaGrade'
     }),
     handleClickSubmit(item, index){
-      if(item.explainer){
+      if(item.explainer && !item.score){
         this.visibleDialog = true
         this.temp__index = index
         this.score = item.score

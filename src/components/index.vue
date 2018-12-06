@@ -15,7 +15,7 @@
 
 
     <section class="card-list">
-      <section v-if="!item.status" @click="jumpToOther(item)" v-for="(item, index) in list" :key="index" class="card-item">
+      <section v-if="item.status == 0" @click="jumpToOther(item)" v-for="(item, index) in list" :key="index" class="card-item">
         <img :src="item.picture || item.url" alt="bgImg">
         <span class="card-title">{{item.label || item.name}}</span>
       </section>
@@ -107,6 +107,7 @@ export default {
       img{
         width: 100%;
         height: 100%;
+        border-radius: 50%;
       }
     }
   }
