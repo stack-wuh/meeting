@@ -362,15 +362,15 @@ export default {
   .tips-text{
     position: fixed;
     left: 50%;
-    bottom: 10%;
+    bottom: 20%;
     transform: translateX(-50%);
     width: 60vw;
-    height: 6vh;
+    height: 7vh;
     margin: 0 auto;
     color: red;
     text-align: center;
-    line-height: 6vh;
-    border-radius: 4px;
+    line-height: 7vh;
+    border-radius: 4rem;
     background-color: #fff;
   }
 }
