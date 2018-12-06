@@ -57,7 +57,7 @@
           </div>
         </my-dialog>
     </section>
-    
+
     <section v-if="!isShowPanel" class="un-wrapper">
       <div class="tips-text">
         等待答题
@@ -94,7 +94,6 @@ export default {
   },
   watch:{
     count(){
-      console.log(this.canGo)
       if(this.info.sequenceNum < this.info.total){
         if(this.count <= 0 && !this.canGo){
           this.$toast({
@@ -116,6 +115,7 @@ export default {
       let timer = setInterval(() => {
         this.count --
         if(this.count <= 0){
+          this.count = 0
           this.isSuccess = successIndex
           clearInterval(timer)
         }
@@ -154,7 +154,7 @@ export default {
     let that = this
     let local = window.localStorage.getItem('userInfo')
     local = local && JSON.parse(local)
-    this.Socket = new WebSocket(window.socketPath + `meeting/passWebsocket/${local.id}/0`)
+    this.Socket = new WebSocket(window.socketPath + `meeting/passWebsocket/${local.id}/${local.orginalJob || 0}`)
     this.Socket.onmessage = e => {
       console.log(e)
       let data = e.data === 'pass' ? {} : JSON.parse(e.data)
