@@ -87,7 +87,7 @@ export default {
       count: 30, //答题倒计时 -- 默认30
       isShowPanel: false , // 是否展示答题面板
       timer: null , // 倒计时的定时器ID
-      isClick: true, // 允许
+      isClick: true, // 允许选择答案
     }
   },
   watch:{
@@ -352,6 +352,7 @@ export default {
 }
 
 .un-wrapper{
+  position: relative;
   width: 100vw;
   height: 100vh;
   background-image: url('../assets/imgs/bg_loading.jpg');
@@ -360,10 +361,10 @@ export default {
   background-position: center;
 
   .tips-text{
-    position: fixed;
+    position: absolute;
     left: 50%;
-    bottom: 20%;
-    transform: translateX(-50%);
+    top: 80%;
+    transform: translateX(-50%) translateY(-50%);
     width: 60vw;
     height: 7vh;
     margin: 0 auto;
