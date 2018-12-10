@@ -17,7 +17,7 @@
     <section class="card-list">
       <section v-if="item.status == 0" @click="jumpToOther(item)" v-for="(item, index) in list" :key="index" class="card-item">
         <img :src="item.picture || item.url" alt="bgImg">
-        <span class="card-title">{{item.label || item.name}}</span>
+        <span class="card-title">{{item.name}}</span>
       </section>
     </section>
 
@@ -64,7 +64,7 @@ export default {
       this.info = res.data.info
       this.$refs.headBox.style.backgroundImage = res.comStr && `url(${res.comStr})`
       this.list = res.data.data.map(item => {
-        return  {...item, path: map.get(item.id)}
+        return  {...item, name: item.name == '答题闯关' ? '' : item.name , path: map.get(item.id)}
       })
     })
   },
