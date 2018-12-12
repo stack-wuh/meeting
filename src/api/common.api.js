@@ -75,7 +75,7 @@ export const validGread = ({
 export const _getMsg = ({
   id
 }) => $http.post({
-  url: window.rootPath + 'index/getMsg.do',
+  url: window.rootPath + '/index/getMsg.do',
   data: {
     id
   }
