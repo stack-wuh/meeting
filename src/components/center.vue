@@ -43,7 +43,7 @@ const list = [
     },
     {
       label: '部门',
-      field: 'depName',
+      field: 'deptName',
       value: '开发部',
     },
     {
