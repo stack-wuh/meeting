@@ -19,7 +19,7 @@ router.beforeEach((to, from, next) => {
     }
     axios({
       method: 'post',
-      url: window.rootPath + 'index/checkLogin.do',
+      url: window.rootPath + '/index/checkLogin.do',
       data: qs.stringify(data)
     }).then(res => {
       let exprie = +new Date() - (res.data.data - 0) > 0 ? false : true
