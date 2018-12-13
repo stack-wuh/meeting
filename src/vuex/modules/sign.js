@@ -51,7 +51,7 @@ const actions = {
       window.localStorage.setItem('userInfo', JSON.stringify({...res.data, exprie: +new Date() + (60 * 60 * 4 * 1000)}))
       setTimeout(() => {
         res.status === 0 && window.$router.push({
-          path: 'index'
+          name: 'index'
         })
       }, 1000)
     } catch (err) {
