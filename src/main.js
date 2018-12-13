@@ -14,7 +14,13 @@ const userInfo = window.localStorage.getItem('userInfo') && JSON.parse(window.lo
 const exprie = userInfo && userInfo.exprie - new Date().getTime() > 0 ? true : false
 router.beforeEach((to, from, next) => {
   if(to.name !== 'login'){
-    axios.post(rootPath + '/index/checkLogin.do', {phone: userInfo.phone}).then(res => {
+    axios({
+      method: 'post',
+      url: window.rootPath + 'index/checkLogin.do',
+      data: {
+        phone: userInfo.phone
+      }
+    }).then(res => {
       let exprie = +new Date() - res.data > 0 ? false : true
       if(exprie && res.status == 0){
         next()
