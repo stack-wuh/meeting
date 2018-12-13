@@ -107,6 +107,11 @@ export default {
     })
     this.handleCheckVote({userId: local.id}).then(res => {
       this.canVote = res.status === 0 ? true : false
+      if(res.status === 3){
+        setTimeout(() => {
+          this.$router.push({path: '/index'})
+        }, 1000)
+      }
     })
   },
   distoryed(){

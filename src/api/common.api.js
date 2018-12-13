@@ -39,8 +39,13 @@ export const _getSeating = () => $http.post({
   url: window.rootPath + '/index/seatManage.do'
 }).catch(err => _catch(err))
 
-export const getGradeInfo = () => $http.post({
-  url: window.rootPath + '/grade/init.do'
+export const getGradeInfo = ({
+  phone
+}) => $http.post({
+  url: window.rootPath + '/grade/init.do',
+  data: {
+    phone
+  }
 }).catch(err => _catch(err))
 
 export const download = ({

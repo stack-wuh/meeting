@@ -118,7 +118,11 @@ const actions = {
    */
   async getGradeInfo() {
     try {
-      const response = await getGradeInfo()
+      let userInfo = window.localStorage.getItem('userInfo')
+      userInfo = userInfo && JSON.parse(userInfo)
+      const response = await getGradeInfo({
+        phone: userInfo.phone
+      })
       return response
     } catch (err) {
       throw new Error(err)

@@ -31,23 +31,24 @@ const actions = {
     check_identify
   }) {
     try {
-      if (!phone || !identify) {
-        _toast({
-          type: 3,
-          msg: '请编辑必填项后登陆!'
-        })
-        return
-      }
-      if(identify != check_identify){
-        _toast({
-          type: 3,
-          msg: '验证码错误!'
-        })
-        return
-      }
+      // if (!phone || !identify) {
+      //   _toast({
+      //     type: 3,
+      //     msg: '请编辑必填项后登陆!'
+      //   })
+      //   return
+      // }
+      // if(identify != check_identify){
+      //   _toast({
+      //     type: 3,
+      //     msg: '验证码错误!'
+      //   })
+      //   return
+      // }
       const res = await signIn({
         phone,
       })
+      window.localStorage.setItem('userInfo', JSON.stringify({...res.data, exprie: +new Date() + (60 * 60 * 4 * 1000)}))
       setTimeout(() => {
         res.status === 0 && window.$router.push({
           name: 'index'
