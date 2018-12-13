@@ -48,8 +48,8 @@ const actions = {
       const res = await signIn({
         phone,
       })
-      window.localStorage.setItem('userInfo', JSON.stringify({...res.data, exprie: +new Date() + (60 * 60 * 4 * 1000)}))
       setTimeout(() => {
+        window.localStorage.setItem('userInfo', JSON.stringify({...res.data, exprie: +new Date() + (60 * 60 * 4 * 1000)}))
         res.status === 0 && window.$router.push({
           name: 'index'
         })

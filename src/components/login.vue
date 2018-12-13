@@ -67,9 +67,11 @@ export default{
     const userInfo = window.localStorage.getItem('userInfo') && JSON.parse(window.localStorage.getItem('userInfo'))
     const exprie = userInfo && userInfo.exprie - new Date().getTime() > 0 ? true : false
     if(exprie){
-      this.$router.push({name: 'index'})
+      setTimeout(() => {
+        this.$router.push({name: 'index'})
+      }, 1000)
     }
-    console.log(userInfo, exprie)
+    // console.log(userInfo, exprie)
   }
 }
 </script>
