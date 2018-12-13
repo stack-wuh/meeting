@@ -276,7 +276,7 @@ export default {
           color: #fff;
         }
         .item__success{
-          background-color: red;
+          background-color: #009d1a;
           color: #fff
         }
       }
