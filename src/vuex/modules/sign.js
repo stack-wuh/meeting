@@ -49,7 +49,6 @@ const actions = {
         phone,
       })
       setTimeout(() => {
-        window.localStorage.setItem('userInfo', JSON.stringify({...res.data, exprie: +new Date() + (60 * 60 * 4 * 1000)}))
         res.status === 0 && window.$router.push({
           name: 'index'
         })
@@ -115,7 +114,7 @@ const actions = {
     } catch (err) {
       throw new Error(err)
     }
-  }
+  },
 }
 
 const getters = {

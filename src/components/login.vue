@@ -63,16 +63,7 @@ export default{
       })
     }
   },
-  created(){
-    const userInfo = window.localStorage.getItem('userInfo') && JSON.parse(window.localStorage.getItem('userInfo'))
-    const exprie = userInfo && userInfo.exprie - new Date().getTime() > 0 ? true : false
-    if(exprie){
-      setTimeout(() => {
-        this.$router.push({name: 'index'})
-      }, 1000)
-    }
-    // console.log(userInfo, exprie)
-  }
+  created(){}
 }
 </script>
 <style lang="less" scoped>

@@ -4,10 +4,7 @@ import router from './router'
 import store from './store'
 
 import '@/utils/vant'
-
-import {
-  _signIn
-} from '@/api/signin.api.js'
+import axios from 'axios'
 
 Vue.config.productionTip = false
 
@@ -17,20 +14,16 @@ const userInfo = window.localStorage.getItem('userInfo') && JSON.parse(window.lo
 const exprie = userInfo && userInfo.exprie - new Date().getTime() > 0 ? true : false
 router.beforeEach((to, from, next) => {
   if(to.name !== 'login'){
-    if(!exprie){
-      router.push({path: '/login'})
-    }
+    axios.post(rootPath + '/index/checkLogin.do').then(res => {
+      let exprie = +new Date() - 1544695200000 > 0 ? false : true
+      if(exprie){
+          next()
+      }else{
+        router.push({path: '/login'})
+      }
+    })
   }
   next()
-  // if(to.name !== 'login'){
-  //   if(exprie == false){
-  //     router.push({name: 'login'})
-  //   }else {
-  //     next()
-  //   }
-  // }else {
-  //   next()
-  // }
 })
 
 new Vue({
