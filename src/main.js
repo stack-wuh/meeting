@@ -11,11 +11,11 @@ Vue.config.productionTip = false
 window.$router = router
 
 const userInfo = window.localStorage.getItem('userInfo') && JSON.parse(window.localStorage.getItem('userInfo'))
-const exprie = userInfo && userInfo.exprie - new Date().getTime() > 0 ? true : false
+
 router.beforeEach((to, from, next) => {
   if(to.name !== 'login'){
     let data = {
-      phone: userInfo.phone
+      phone: store.state.phone || userInfo && userInfo.phone
     }
     axios({
       method: 'post',

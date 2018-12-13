@@ -1,9 +1,12 @@
 const state = {
-  desc: 'this is state index'
+  desc: 'this is state index',
+  phone: '',
 }
 
 const mutations = {
-
+  setUserPhone(state, {phone}){
+    state.phone = phone
+  }
 }
 
 const actions = {
