@@ -17,11 +17,12 @@ const userInfo = window.localStorage.getItem('userInfo') && JSON.parse(window.lo
 const exprie = userInfo && userInfo.exprie - new Date().getTime() > 0 ? true : false
 const canGo = false
 router.beforeEach((to, from, next) => {
+  console.log(exprie)
   if(to.name !== 'login'){
     if(exprie){
-      next()
+      next({name: to.name})
     }else{
-      next('/login')
+      // router.push({name: 'login'})
     }
   }
   next()
