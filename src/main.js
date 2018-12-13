@@ -19,18 +19,14 @@ router.beforeEach((to, from, next) => {
   const exprie = userInfo && userInfo.exprie - new Date().getTime() > 0 ? true : false
   const name = to.name
   next()
-  return
-  // if(name !== 'login'){
-    if(exprie){
-      _signIn({phone: userInfo && userInfo.phone}).then(res => {
-        window.localStorage.setItem('userInfo', JSON.stringify({...res.data, exprie: +new Date() + (60 * 60 * 4 * 1000)}))
-      })
-      // next()
-    }else {
-      router.push({path: '/login'})
-    }
-  // }
-  next()
+  //   if(exprie){
+  //     _signIn({phone: userInfo && userInfo.phone}).then(res => {
+  //       window.localStorage.setItem('userInfo', JSON.stringify({...res.data, exprie: +new Date() + (60 * 60 * 4 * 1000)}))
+  //     })
+  //   }else {
+  //     router.push({path: '/login'})
+  //   }
+  // next()
 })
 
 new Vue({

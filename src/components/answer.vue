@@ -116,6 +116,7 @@ export default {
         if(this.count <= 0){
           this.count = 0
           this.isSuccess = successIndex
+          // this.visibleDialog = true  // 倒计时结束的时候弹框
           clearInterval(this.timer)
         }
       }, 1000)
@@ -132,7 +133,7 @@ export default {
         }
         this.canGo = successIndex === index ? true : false
         if(index !== successIndex && this.isClick){
-          this.visibleDialog = true
+          if(this.count <= 0)  this.visibleDialog = true
           this.Socket.send('wrong')
         }
         if(this.info.status == 0 && this.info.sequenceNum >= this.info.total){
@@ -153,9 +154,7 @@ export default {
     local = local && JSON.parse(local)
     this.Socket = new WebSocket(window.socketPath + `meeting/passWebsocket/${local.id}/0`)
     this.Socket.onmessage = e => {
-      console.log(e)
       let data = e.data === 'pass' ? {} : JSON.parse(e.data)
-      console.log(data)
       if(e.data != 'pass'){
         let options = data && [data.optionA, data.optionB, data.optionC, data.optionD]
         that.info = {...data, options}

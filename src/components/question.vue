@@ -110,7 +110,6 @@ export default {
     let that = this
     this.Socket = new WebSocket(window.socketPath + `meeting/topicWebsocket/${local.id}/${local.orginalJob || 0}`)
     this.Socket.onmessage = function(e) {
-      // console.log(e)
       if(e.data === 'display'){
         that.fetchData()
       }
