@@ -31,20 +31,20 @@ const actions = {
     check_identify
   }) {
     try {
-      // if (!phone || !identify) {
-      //   _toast({
-      //     type: 3,
-      //     msg: '请编辑必填项后登陆!'
-      //   })
-      //   return
-      // }
-      // if(identify != check_identify){
-      //   _toast({
-      //     type: 3,
-      //     msg: '验证码错误!'
-      //   })
-      //   return
-      // }
+      if (!phone || !identify) {
+        _toast({
+          type: 3,
+          msg: '请编辑必填项后登陆!'
+        })
+        return
+      }
+      if(identify != check_identify){
+        _toast({
+          type: 3,
+          msg: '验证码错误!'
+        })
+        return
+      }
       const res = await signIn({
         phone,
       })
