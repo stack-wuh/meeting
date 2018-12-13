@@ -13,20 +13,25 @@ Vue.config.productionTip = false
 
 window.$router = router
 
+// router.beforeEach((to, from, next) => {
+//   let userInfo = window.localStorage.getItem('userInfo')
+//     userInfo = userInfo && JSON.parse(userInfo)
+//   const exprie = userInfo && userInfo.exprie - new Date().getTime() > 0 ? true : false
+// })
+const userInfo = window.localStorage.getItem('userInfo') && JSON.parse(window.localStorage.getItem('userInfo'))
+const exprie = userInfo && userInfo.exprie - new Date().getTime() > 0 ? true : false
+
+
 router.beforeEach((to, from, next) => {
-  let userInfo = window.localStorage.getItem('userInfo')
-    userInfo = userInfo && JSON.parse(userInfo)
-  const exprie = userInfo && userInfo.exprie - new Date().getTime() > 0 ? true : false
-  const name = to.name
-  next()
-  //   if(exprie){
-  //     _signIn({phone: userInfo && userInfo.phone}).then(res => {
-  //       window.localStorage.setItem('userInfo', JSON.stringify({...res.data, exprie: +new Date() + (60 * 60 * 4 * 1000)}))
-  //     })
-  //   }else {
-  //     router.push({path: '/login'})
-  //   }
-  // next()
+  if(to.name !== 'login'){
+    if(exprie == false){
+      router.push({name: 'login'})
+    }else {
+      next()
+    }
+  }else {
+    next()
+  }
 })
 
 new Vue({

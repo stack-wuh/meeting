@@ -64,7 +64,12 @@ export default{
     }
   },
   created(){
-
+    const userInfo = window.localStorage.getItem('userInfo') && JSON.parse(window.localStorage.getItem('userInfo'))
+    const exprie = userInfo && userInfo.exprie - new Date().getTime() > 0 ? true : false
+    if(exprie){
+      this.$router.push({name: 'index'})
+    }
+    console.log(userInfo, exprie)
   }
 }
 </script>
