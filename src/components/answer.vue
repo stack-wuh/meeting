@@ -54,9 +54,9 @@
     </section>
 
     <section v-if="!isShowPanel" class="un-wrapper">
-      <div class="tips-text">
+      <!-- <div class="tips-text">
         等待答题
-      </div>
+      </div> -->
     </section>
 
   </section>
@@ -354,7 +354,8 @@ export default {
   position: relative;
   width: 100vw;
   height: 100vh;
-  background-image: url('../assets/imgs/bg_loading.jpg');
+  // background-image: url('../assets/imgs/bg_loading.jpg');
+  background-image: url('../assets/imgs/bg_ques.png');
   background-size: 100vw 100vh;
   background-repeat: no-repeat;
   background-position: center;
