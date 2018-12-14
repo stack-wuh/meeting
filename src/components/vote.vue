@@ -105,18 +105,18 @@ export default {
     this.getVoteInfo().then(res => {
       this.list = res.data
     })
-    this.handleCheckVote({userId: local.id}).then(res => {
-      this.canVote = res.status === 0 ? true : false
-      this.$toast({
-        type: 2,
-        msg: res.msg
-      })
-      if(res.status === 3){
-        setTimeout(() => {
-          this.$router.push({path: '/index'})
-        }, 1000)
-      }
-    })
+    // this.handleCheckVote({userId: local.id}).then(res => {
+    //   this.canVote = res.status === 0 ? true : false
+    //   this.$toast({
+    //     type: 2,
+    //     msg: res.msg
+    //   })
+    //   if(res.status === 3){
+    //     setTimeout(() => {
+    //       this.$router.push({path: '/index'})
+    //     }, 1000)
+    //   }
+    // })
   },
   distoryed(){
     this.Socket.close()

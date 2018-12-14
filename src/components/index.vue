@@ -25,6 +25,8 @@
 </template>
 <script>
 import {mapActions} from 'vuex'
+import axios from 'axios'
+import qs from 'qs'
 export default {
   props: {},
   name: '',
@@ -39,17 +41,76 @@ export default {
 
       isShowQues: true, // 是否展示答题闯关
       question: {}, // 答题闯关的对象
+
+      isCanShowVote: false, // 能否点击议题打分
+      showVoteToastMsg: '', //对话框弹出的内容
+      isCanShowQues: false,
+      showQuesToastMsg: '',
+
     }
   },
   methods: {
     ...mapActions({
-      'handleIndexInfo':'handleIndexInfo'
+      'handleIndexInfo':'handleIndexInfo',
+      'handleCheckVote': 'handleCheckVote',
+      'handleVildaGrade' : 'handleVildaGrade'
     }),
+    handleVoteCheck(userId){
+      let _data = {
+        userId
+      }
+      axios({
+        method: 'post',
+        url: window.rootPath + '/vote/checkVote.do',
+        data: qs.stringify(_data)
+      }).then(res => {
+        this.isCanShowVote = res.data.status
+        this.showVoteToastMsg = res.data.msg
+      })
+    },
+    handleQuesCheck(userId){
+      let _data = {
+        userId
+      }
+      axios({
+        method: 'post',
+        url: window.rootPath + '/grade/checkTopicGread.do',
+        data: qs.stringify(_data)
+      }).then(res => {
+        this.isCanShowQues = res.data.status
+        this.showQuesToastMsg = res.data.msg
+      })
+    },
+
     jumpToOther(item){
-      this.$router.push({path: item.path, query: {tag: item.name, ename: item.ename, id: item.id}})
+      if(item.id === 1){
+        if(this.isCanShowVote !== 0){
+          this.$toast({
+            type: 3,
+            msg: this.showVoteToastMsg
+          })
+        }else {
+          this.$router.push({path: item.path, query: {tag: item.name, ename: item.ename, id: item.id}})
+        }
+      }else if(item.id === 2){
+        if(this.isCanShowQues !== 0){
+          this.$toast({
+            type: 3,
+            msg: this.showQuesToastMsg
+          })
+        }else {
+          this.$router.push({path: item.path, query: {tag: item.name, ename: item.ename, id: item.id}})
+        }
+      }else{
+        this.$router.push({path: item.path, query: {tag: item.name, ename: item.ename, id: item.id}})
+      }
     }
   },
   created(){
+    let userInfo = window.localStorage.getItem('userInfo')
+    userInfo = userInfo && JSON.parse(userInfo)
+    this.handleVoteCheck(userInfo.id)
+    this.handleQuesCheck(userInfo.id)
     let map = new Map([
       [1, 'vote'],
       [2, 'question'],
