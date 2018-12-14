@@ -255,24 +255,8 @@ export default {
           box-sizing: border-box;
           box-shadow: 0 0.08rem 0.02rem black;
         }
-        // .item:after{
-        //   position: absolute;
-        //   top:92%;
-        //   right: 15%;
-        //   content: '';
-        //   padding: 0.08rem 0.2rem;
-        //   background-color: #fff;
-        // }
-        // .item:before{
-        //   position: absolute;
-        //   top:92%;
-        //   right: 25%;
-        //   content: '';
-        //   padding: 0.08rem 0.1rem;
-        //   background-color: #fff;
-        // }
         .item__active{
-          background-color: rgb(112, 189, 70);
+          background-color: #F28B00;
           color: #fff;
         }
         .item__success{
