@@ -143,7 +143,6 @@ export default {
        box-sizing: border-box;
        img{
          width: inherit;
-         // height: inherit;
        }
      }
      .my-button__download{
