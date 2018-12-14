@@ -10,7 +10,7 @@
           v-if="path === '/meettings'"
           class="content__info content__article"
           v-html="info.material"
-          style = 'margin-bottom: 1.6rem;'></article>
+          style = 'margin-bottom: 2rem;'></article>
         <div v-if="path === '/seating'" class="img-box">
           <img :src="info" alt="seat">
         </div>
