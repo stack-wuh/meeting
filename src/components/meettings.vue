@@ -6,7 +6,11 @@
       </header>
       <section class="content flex flex-flow__col">
         <h3 v-if="path === '/meettings'" class="content__title">2018年东风LEAR年会</h3>
-        <article v-if="path === '/meettings'" class="content__info content__article" v-html="info.material" ></article>
+        <article
+          v-if="path === '/meettings'"
+          class="content__info content__article"
+          v-html="info.material"
+          style = 'margin-bottom: 1.6rem;'></article>
         <div v-if="path === '/seating'" class="img-box">
           <img :src="info" alt="seat">
         </div>
