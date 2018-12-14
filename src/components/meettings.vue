@@ -13,7 +13,13 @@
         <div v-if = "['/order', '/detail', '/location'].includes(path)" class="img-box">
           <img :src="info.content" alt="other">
         </div>
-        <my-button :disabled="false" @handleClickBtn="DownLoad" v-if="path === '/meettings'" text="下载会议资料" type="danger"></my-button>
+        <my-button
+          :disabled="false"
+          @handleClickBtn="DownLoad"
+          v-if="path === '/meettings'"
+          text="下载会议资料"
+          type="danger"
+          class="my-button__download"></my-button>
       </section>
   </section>
 </template>
@@ -112,7 +118,6 @@ export default {
    }
 
    .content{
-     wdith: inherit;
      min-height: 80vh;
      margin-left: .3rem;
      margin-right: .3rem;
@@ -136,6 +141,12 @@ export default {
          width: inherit;
          // height: inherit;
        }
+     }
+     .my-button__download{
+       position: fixed;
+       bottom: 3vh;
+       left: .3rem;
+       width: calc(100% - .6rem);
      }
    }
  }
