@@ -107,6 +107,10 @@ export default {
     })
     this.handleCheckVote({userId: local.id}).then(res => {
       this.canVote = res.status === 0 ? true : false
+      this.$toast({
+        type: 2,
+        msg: res.msg
+      })
       if(res.status === 3){
         setTimeout(() => {
           this.$router.push({path: '/index'})

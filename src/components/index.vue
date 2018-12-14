@@ -64,7 +64,7 @@ export default {
       this.info = res.data.info
       this.$refs.headBox.style.backgroundImage = res.comStr && `url(${res.comStr})`
       this.list = res.data.data.map(item => {
-        return  {...item, name: item.name == '答题闯关' ? '' : item.name , path: map.get(item.id)}
+        return  {...item, name: item.name , path: map.get(item.id)}
       })
     })
   },
