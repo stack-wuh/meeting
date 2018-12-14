@@ -23,6 +23,8 @@
 import logo from '@/assets/imgs/logo.png'
 import {mapActions} from 'vuex'
 import {validPhone} from '@/utils/vaild'
+import axios from 'axios'
+import qs from 'qs'
 export default{
   props: {},
   name: '',
@@ -63,7 +65,28 @@ export default{
       })
     }
   },
-  created(){}
+  created(){
+    let userInfo = window.localStorage.getItem('userInfo')
+    userInfo = userInfo && JSON.parse(userInfo)
+    let data = {
+      phone: userInfo.phone
+    }
+    if(userInfo && userInfo.phone){
+      axios({
+        method: 'post',
+        url: window.rootPath + '/index/checkLogin.do',
+        data: qs.stringify(data)
+      }).then(res => {
+        let exprie = +new Date() - (res.data.data - 0) > 0 ? false : true
+        if(exprie && res.data.status == 0){
+          // console.log('is ok', exprie)
+          this.$router.push({path: '/index'})
+        }else{
+          router.push({path: '/login'})
+        }
+      })
+    }
+  }
 }
 </script>
 <style lang="less" scoped>
