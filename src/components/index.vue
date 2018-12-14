@@ -4,6 +4,7 @@
       <div @click="jumpToOther({path: '/center'})" class="avatar-box">
         <img :src="info.headPic || defaultAvatar" alt="avatar">
       </div>
+      <img class="icon-hat" src="../assets/imgs/icon-hat.png" alt="hat">
     </header>
 
     <van-notice-bar
@@ -136,7 +137,7 @@ export default {
   height: 100vh;
   padding: 0.4rem;
   color: #fff;
-  background-image: url('../assets/imgs/bg_red.png');
+  background-image: url('../assets/imgs/bg_index.png');
   background-size: 100% 100%;
   box-sizing: border-box;
   overflow-y: scroll;
@@ -150,6 +151,14 @@ export default {
     background-size: 100%;
     background-position: center;
     border-radius: 4px;
+
+    .icon-hat{
+      position: absolute;
+      top: -25%;
+      right: 38%;
+      width: .5rem !important;
+      height: .5rem !important;
+    }
 
     .avatar-box{
       position: absolute;
