@@ -112,8 +112,8 @@ export default {
    }
 
    .content{
-     height: inherit;
      wdith: inherit;
+     min-height: 80vh;
      margin-left: .3rem;
      margin-right: .3rem;
      background-color: #fff;
@@ -132,11 +132,9 @@ export default {
        width: 100%;
        height: 100%;
        box-sizing: border-box;
-       overflow: hidden;
-
        img{
          width: inherit;
-         height: inherit;
+         // height: inherit;
        }
      }
    }
