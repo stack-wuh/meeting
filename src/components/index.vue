@@ -4,7 +4,7 @@
       <div @click="jumpToOther({path: '/center'})" class="avatar-box">
         <img :src="info.headPic || defaultAvatar" alt="avatar">
       </div>
-      <img class="icon-hat" src="../assets/imgs/icon-hat.png" alt="hat">
+      <!-- <img class="icon-hat" src="../assets/imgs/icon-hat.png" alt="hat"> -->
     </header>
 
     <van-notice-bar
