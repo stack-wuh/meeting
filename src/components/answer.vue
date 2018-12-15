@@ -54,9 +54,21 @@
     </section>
 
     <section v-if="!isShowPanel" class="un-wrapper">
-      <!-- <div class="tips-text">
+      <div class="img-box">
+          <img src="../assets/imgs/icon-1.png" alt="icon-1">
+          <img src="../assets/imgs/icon-2.png" alt="icon-2">
+          <div class="text-box">
+            <h3>企业文化</h3>
+            <h3>中长期发展战略</h3>
+            <h3>闯关答题</h3>
+          </div>
+      </div>
+
+
+
+      <div class="tips-text">
         等待答题
-      </div> -->
+      </div>
     </section>
 
   </section>
@@ -338,25 +350,47 @@ export default {
   position: relative;
   width: 100vw;
   height: 100vh;
-  // background-image: url('../assets/imgs/bg_loading.jpg');
-  background-image: url('../assets/imgs/bg_ques.png');
-  background-size: 100vw 100vh;
-  background-repeat: no-repeat;
-  background-position: center;
+  background-color: #fff;
+
+  .img-box{
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+    justify-content: center;
+
+    img[alt = 'icon-1']{
+      width: 2.4rem;
+      height: 2.1rem;
+      margin-top: 1rem;
+      margin-bottom: .5rem;
+    }
+    img[alt = 'icon-2']{
+      width: 4.2rem;
+      height: 2.6rem;
+      margin-bottom: .5rem;
+    }
+    .text-box{
+      text-align: center;
+      font-size: .36rem;
+      line-height: 1.5;
+    }
+  }
+
 
   .tips-text{
-    position: absolute;
-    left: 50%;
-    top: 80%;
-    transform: translateX(-50%) translateY(-50%);
+    // position: absolute;
+    // left: 50%;
+    // top: 80%;
+    // transform: translateX(-50%) translateY(-50%);
     width: 60vw;
     height: 7vh;
     margin: 0 auto;
-    color: red;
+    margin-top: 1rem;
+    color: #fff;
     text-align: center;
     line-height: 7vh;
     border-radius: 4rem;
-    background-color: #fff;
+    background-color: #cf3230;
   }
 }
 </style>
