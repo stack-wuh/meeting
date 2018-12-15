@@ -56,7 +56,7 @@ export default {
       'handleCheckVote': 'handleCheckVote',
       'handleVildaGrade' : 'handleVildaGrade'
     }),
-    handleVoteCheck(userId){
+    handleVoteCheck(userId, item){
       let _data = {
         userId
       }
@@ -67,9 +67,18 @@ export default {
       }).then(res => {
         this.isCanShowVote = res.data.status
         this.showVoteToastMsg = res.data.msg
+
+        if(res.data.status !== 0){
+          this.$toast({
+            type:3,
+            msg: res.data.msg
+          })
+        }else {
+          this.$router.push({path: item.path, query: {tag: item.name, ename: item.ename, id: item.id}})
+        }
       })
     },
-    handleQuesCheck(userId){
+    handleQuesCheck(userId, item){
       let _data = {
         userId
       }
@@ -80,38 +89,31 @@ export default {
       }).then(res => {
         this.isCanShowQues = res.data.status
         this.showQuesToastMsg = res.data.msg
+
+        if(res.data.status !== 0){
+          this.$toast({
+            type: 3,
+            msg: res.data.msg
+          })
+        }else {
+          this.$router.push({path: item.path, query: {tag: item.name, ename: item.name, id: item.id}})
+        }
       })
     },
 
     jumpToOther(item){
+      let userInfo = window.localStorage.getItem('userInfo')
+      userInfo = userInfo && JSON.parse(userInfo)
       if(item.id === 1){
-        if(this.isCanShowVote !== 0){
-          this.$toast({
-            type: 3,
-            msg: this.showVoteToastMsg
-          })
-        }else {
-          this.$router.push({path: item.path, query: {tag: item.name, ename: item.ename, id: item.id}})
-        }
+        this.handleVoteCheck(userInfo.id, item)
       }else if(item.id === 2){
-        if(this.isCanShowQues !== 0){
-          this.$toast({
-            type: 3,
-            msg: this.showQuesToastMsg
-          })
-        }else {
-          this.$router.push({path: item.path, query: {tag: item.name, ename: item.ename, id: item.id}})
-        }
+        this.handleQuesCheck(userInfo.id, item)
       }else{
         this.$router.push({path: item.path, query: {tag: item.name, ename: item.ename, id: item.id}})
       }
     }
   },
   created(){
-    let userInfo = window.localStorage.getItem('userInfo')
-    userInfo = userInfo && JSON.parse(userInfo)
-    this.handleVoteCheck(userInfo.id)
-    this.handleQuesCheck(userInfo.id)
     let map = new Map([
       [1, 'vote'],
       [2, 'question'],
