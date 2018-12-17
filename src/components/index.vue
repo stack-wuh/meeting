@@ -139,7 +139,7 @@ export default {
   height: 100vh;
   padding: 0.4rem;
   color: #fff;
-  background-image: url('../assets/imgs/bg_index.png');
+  background-image: url('../assets/imgs/bg_red.png');
   background-size: 100% 100%;
   box-sizing: border-box;
   overflow-y: scroll;
