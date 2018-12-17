@@ -10,7 +10,9 @@ import {
   successful,
   validGread,
   _getMsg,
-  _getBgPic
+  _getBgPic,
+  getChecked,
+  handleCheck,
 }
 from '@/api/common.api'
 
@@ -216,6 +218,40 @@ const actions = {
 
       return response
     }catch(err) {
+      throw new Error(err)
+    }
+  },
+
+  async GetChecked(){
+    let userInfo = window.localStorage.getItem('userInfo')
+    userInfo = userInfo && JSON.parse(userInfo)
+    try{
+      const response  = await getChecked({
+          data: {
+            phone: userInfo.phone
+          }
+      })
+
+      return response
+    }catch(err){
+      throw new Error(err)
+    }
+  },
+
+  async HandleCheck(){
+    let userInfo = window.localStorage.getItem('userInfo')
+    userInfo = userInfo && JSON.parse(userInfo)
+    try{
+      const response = await handleCheck(
+        {
+          data: {
+            phone: userInfo.phone
+          }
+        }
+      )
+
+      return response
+    }catch(err){
       throw new Error(err)
     }
   }

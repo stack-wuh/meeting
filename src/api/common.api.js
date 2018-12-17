@@ -89,3 +89,15 @@ export const _getMsg = ({
 export const _getBgPic = () => $http.post({
   url: window.rootPath + '/index/getbgPic.do'
 }).catch(err => _catch(err))
+
+export const getChecked = ({
+  data
+}) => $http.post({
+  url: window.rootPath + '/index/init.do',
+  data
+}).catch(err => _catch(err))
+
+export const handleCheck = ({data}) => $http.post({
+  url: window.rootPath + '/index/sign.do',
+  data
+}).catch(err => _catch(err))

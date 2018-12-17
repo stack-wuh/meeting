@@ -2,13 +2,17 @@
   <section class="wrapper">
     <section class="list-box">
       <ul class="list">
-        <li class="list-item flex flex-align__center flex-justify__between" v-for="(item, index) in list" :key="index">
+        <li class="list-item flex flex-align__center flex-justify__between"
+          v-for="(item, index) in list" :key="index">
           <div class="list__label">
             <span class="list__text">{{item.label}}</span>
           </div>
           <div class="list__value">
             <div v-if="item.type === 'img'" class="list__avatar-box">
               <img class="list__avatar" v-if="item.type === 'img'" :src="info[item.field] || item.value" alt="avatar">
+            </div>
+            <div v-else-if="item.type === 'button'" class="">
+              <span @click="handleSignCheck" class="my-button__sub1" :class="[signState == 0 ? '' : 'my-button__sub_active']">签到</span>
             </div>
             <span v-else class="list__text">{{info[item.field] || item.value}}</span>
           </div>
@@ -50,6 +54,10 @@ const list = [
       label: '桌号',
       field: 'tableNum',
       value: '暂无',
+    },
+    {
+      label: '签到',
+      type: 'button'
     }
 ]
 
@@ -60,23 +68,41 @@ export default {
   data(){
     return {
       list,
-      info: {}
+      info: {},
+      signState: 0,
     }
   },
   methods: {
     ...mapActions({
-      'handleIndexInfo': 'handleIndexInfo'
+      'handleIndexInfo': 'handleIndexInfo',
+      'GetChecked': 'GetChecked',
+      'HandleCheck': 'HandleCheck'
     }),
     handleSignOut(){
       window.localStorage.setItem('userInfo', JSON.stringify({}))
       setTimeout(() => {
         this.$router.push({path: '/login'})
       }, 1000)
+    },
+    handleSignCheck(){
+      if(this.signState === 1){
+        this.$toast({
+          type: 3,
+          msg: '请勿重复签到 '
+        })
+        return
+      }
+      this.HandleCheck().then(res =>{
+        if(res.status === 0){
+          this.signState = 1
+        }
+      })
     }
   },
   created(){
     this.handleIndexInfo().then(res => {
       this.info = res.data.info
+      this.signState = res.data.signState
     })
   }
 }
@@ -123,6 +149,16 @@ export default {
     .my-btn__text{
       font-size: .4rem;
     }
+  }
+  .my-button__sub1{
+    padding: .1rem .2rem;
+    background-color: #f44;
+    color: #fff;
+    border-radius: .08rem;
+  }
+  .my-button__sub_active{
+    color: #999;
+    background-color: #ccc;
   }
 }
 </style>
