@@ -176,9 +176,6 @@ export default {
       let elem = this.$refs.content
       elem.style.backgroundImage = res.data && `url(${res.data})`
     })
-  },
-  distoryed(){
-    this.Socket.close()
   }
 }
 </script>

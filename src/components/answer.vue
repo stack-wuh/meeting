@@ -177,14 +177,13 @@ export default {
         this.isSuccess = -1 // 清除正确答案
         this.isClick = true // 允许再次点击
         this.visibleDialog = false  // 关掉dialog
+      }else if(e.data === 'ping'){
+        this.Socket.send('')
       }else {
         this.Socket.close()
       }
     }
   },
-  distoryed(){
-    this.Socket.close()
-  }
 }
 </script>
 <style lang="less" scoped>

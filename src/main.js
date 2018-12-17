@@ -23,7 +23,6 @@ router.beforeEach((to, from, next) => {
       data: qs.stringify(data)
     }).then(res => {
       let exprie = +new Date() - (res.data.data - 0) > 0 ? false : true
-      console.log(exprie)
       if(exprie && res.data.status == 0){
         next()
       }else{
