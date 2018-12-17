@@ -9,7 +9,7 @@
 
     <van-notice-bar
       @click="jumpToOther({path: '/barrage'})"
-      text="温馨提示: 点击个人头像获取您的参会信息"
+      text="温馨提示: 点击个人头像进行签到并获取您的参会信息。"
       :left-icon="msgIcon"
       class="my-notice-bar">
     </van-notice-bar>
