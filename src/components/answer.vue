@@ -42,17 +42,13 @@
               <img :src="canGo ? successImg : errorImg" alt="logo" style="width: 100%; height: 100%;">
             </div>
             <p class="dialog__sub">{{canGo ? '恭喜你' : '很遗憾'}}</p>
-            <!-- <p v-if="info.sequenceNum !== info.total" class="dialog__title">{{canGo ? '回答正确' : '闯关失败'}}</p> -->
-            <!-- <p v-if="info.sequenceNum == info.total" class="dialog__title">{{canGo ? '闯关成功' : '闯关失败'}}</p> -->
             <p v-if="info.sequenceNum == info.total && canGo" class="dialog__title">闯关成功</p>
             <van-button v-if="info.sequenceNum == info.total" @click="jump2Other" type="primary" class="btn__submit">回到首页</van-button>
             <van-button v-if="info.sequenceNum !== info.total" @click="visibleDialog = false" type="primary" class="btn__submit">{{canGo ? '继续闯关' : '继续观战'}}</van-button>
           </div>
         </my-dialog>
 
-
     </section>
-
     <section v-if="!isShowPanel" class="un-wrapper">
       <div class="img-box">
           <img src="../assets/imgs/icon-1.png" alt="icon-1">
@@ -63,8 +59,6 @@
             <h3>闯关答题</h3>
           </div>
       </div>
-
-
 
       <div class="tips-text">
         等待答题
@@ -104,15 +98,28 @@ export default {
   },
   watch:{
     count(){
-      if(this.info.status == 0 && this.count <=0 && this.isChecked < 0){
+      if(this.info.status == 0 && this.count == 0 && this.isChecked < 0){
         this.$toast({
           type: 3,
           msg: '操作超时,只能观战!'
         })
         this.Socket.send('wrong')
       }
-      if(this.info.total <= this.info.sequenceNum && this.count <= 0){
+      if(this.info.total <= this.info.sequenceNum && this.count == 0){
         this.visibleDialog = true
+      }
+      if(!this.canGo && this.count == 0){
+        this.visibleDialog = true
+        this.Socket.send('wrong')
+      }
+      if(this.info.status == 0 && this.info.sequenceNum >= this.info.total && this.count == 0){
+        let local = window.localStorage.getItem('userInfo')
+        local = local && JSON.parse(local)
+        let data = {
+          userId: local.id,
+          meetingId: this.info.meetingId
+        }
+        this.addSuccess(data)
       }
     }
   },
@@ -120,14 +127,21 @@ export default {
     ...mapActions({
       'addSuccess': 'addSuccess'
     }),
+
+    /**
+     * [clockNow ]
+     * @method clockNow
+     * @return {[type]} [description]
+     */
     clockNow(){
       let successIndex = this.info.options.indexOf(this.info.rightAnswer)
       if(this.timer) clearInterval(this.timer)
       this.timer = setInterval(() => {
         this.count --
         if(this.count <= 0){
-          this.count = 0
-          this.isSuccess = successIndex
+          this.count = 0    // 重新赋值count
+          this.isSuccess = successIndex  // 显示正确答案
+          this.isClick = false // 超时之后不允许继续点击
           // this.visibleDialog = true  // 倒计时结束的时候弹框
           clearInterval(this.timer)
         }
@@ -144,15 +158,14 @@ export default {
           meetingId: this.info.meetingId
         }
         this.canGo = successIndex === index ? true : false
-        if(index !== successIndex && this.isClick){
-          if(this.count <= 0)  this.visibleDialog = true
-          this.Socket.send('wrong')
-        }
+        // if(index !== successIndex){
+        //     this.visibleDialog = true
+        //     this.Socket.send('wrong')
+        // }
         if(this.info.status == 0 && this.info.sequenceNum >= this.info.total){
-          this.addSuccess(data)
+            // this.addSuccess(data)
         }
       }
-      this.isClick = false
     },
     jump2Other(){
       setTimeout(() => {
