@@ -108,7 +108,7 @@ export default {
       if(this.info.total <= this.info.sequenceNum && this.count == 0){
         this.visibleDialog = true
       }
-      if(!this.canGo && this.count == 0){
+      if(this.info.status == 0 && !this.canGo && this.count == 0){
         this.visibleDialog = true
         this.Socket.send('wrong')
       }
@@ -142,7 +142,6 @@ export default {
           this.count = 0    // 重新赋值count
           this.isSuccess = successIndex  // 显示正确答案
           this.isClick = false // 超时之后不允许继续点击
-          // this.visibleDialog = true  // 倒计时结束的时候弹框
           clearInterval(this.timer)
         }
       }, 1000)
@@ -151,20 +150,7 @@ export default {
       if(this.isClick){
         this.isChecked = index
         let successIndex = this.info.options.indexOf(this.info.rightAnswer)
-        let local = window.localStorage.getItem('userInfo')
-        local = local && JSON.parse(local)
-        let data = {
-          userId: local.id,
-          meetingId: this.info.meetingId
-        }
         this.canGo = successIndex === index ? true : false
-        // if(index !== successIndex){
-        //     this.visibleDialog = true
-        //     this.Socket.send('wrong')
-        // }
-        if(this.info.status == 0 && this.info.sequenceNum >= this.info.total){
-            // this.addSuccess(data)
-        }
       }
     },
     jump2Other(){
