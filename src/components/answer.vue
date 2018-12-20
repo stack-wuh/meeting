@@ -373,12 +373,12 @@ export default {
     img[alt = 'icon-1']{
       width: 2.4rem;
       height: 2.1rem;
-      margin-top: 1rem;
       margin-bottom: .5rem;
     }
     img[alt = 'icon-2']{
       width: 4.2rem;
       height: 2.6rem;
+      margin-top: 1rem;
       margin-bottom: .5rem;
     }
     .text-box{
@@ -390,10 +390,6 @@ export default {
 
 
   .tips-text{
-    // position: absolute;
-    // left: 50%;
-    // top: 80%;
-    // transform: translateX(-50%) translateY(-50%);
     width: 60vw;
     height: 7vh;
     margin: 0 auto;
