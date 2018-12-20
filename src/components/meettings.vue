@@ -5,7 +5,7 @@
         <p>{{query.ename}}</p>
       </header>
       <section class="content flex flex-flow__col">
-        <h3 v-if="path === '/meettings'" class="content__title">2018年东风LEAR年会</h3>
+        <!-- <h3 v-if="path === '/meettings'" class="content__title">2018年东风LEAR年会</h3> -->
         <article
           v-if="path === '/meettings'"
           class="content__info content__article"

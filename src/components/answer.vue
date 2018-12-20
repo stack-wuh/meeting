@@ -51,8 +51,8 @@
     </section>
     <section v-if="!isShowPanel" class="un-wrapper">
       <div class="img-box">
-          <img src="../assets/imgs/icon-1.png" alt="icon-1">
           <img src="../assets/imgs/icon-2.png" alt="icon-2">
+          <img src="../assets/imgs/icon-1.png" alt="icon-1">
           <div class="text-box">
             <h3>企业文化</h3>
             <h3>中长期发展战略</h3>
