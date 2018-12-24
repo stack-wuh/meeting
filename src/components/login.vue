@@ -79,10 +79,7 @@ export default{
       }).then(res => {
         let exprie = +new Date() - (res.data.data - 0) > 0 ? false : true
         if(exprie && res.data.status == 0){
-          // console.log('is ok', exprie)
           this.$router.push({path: '/index'})
-        }else{
-          router.push({path: '/login'})
         }
       })
     }

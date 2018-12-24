@@ -17,13 +17,13 @@
         <div v-if = "['/order', '/detail', '/location'].includes(path)" class="img-box">
           <img :src="info.content" alt="other">
         </div>
-        <my-button
+        <!-- <my-button
           :disabled="false"
           @handleClickBtn="DownLoad"
           v-if="path === '/meettings'"
           text="下载会议资料"
           type="danger"
-          class="my-button__download"></my-button>
+          class="my-button__download"></my-button> -->
       </section>
   </section>
 </template>
