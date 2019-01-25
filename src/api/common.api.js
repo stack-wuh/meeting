@@ -101,3 +101,14 @@ export const handleCheck = ({data}) => $http.post({
   url: window.rootPath + '/index/sign.do',
   data
 }).catch(err => _catch(err))
+
+
+export const wrongQue = ({
+  userId,
+  questionId,
+}) => $http.post({
+  url: window.rootPath + 'userPo/wrongQue.do',
+  data: {
+    userId, questionId
+  }
+}).catch(_catch)

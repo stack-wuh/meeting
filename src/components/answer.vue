@@ -125,7 +125,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      'addSuccess': 'addSuccess'
+      'addSuccess': 'addSuccess',
+      'WrongQue' : 'WrongQue'
     }),
 
     /**
@@ -151,6 +152,11 @@ export default {
         this.isChecked = index
         let successIndex = this.info.options.indexOf(this.info.rightAnswer)
         this.canGo = successIndex === index ? true : false
+        // if(this.canGo){
+        //   this.WrongQue({
+        //     questionId: this.info.id
+        //   })
+        // }
       }
     },
     jump2Other(){

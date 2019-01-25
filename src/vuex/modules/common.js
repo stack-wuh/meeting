@@ -13,6 +13,7 @@ import {
   _getBgPic,
   getChecked,
   handleCheck,
+  wrongQue,
 }
 from '@/api/common.api'
 
@@ -254,6 +255,14 @@ const actions = {
     }catch(err){
       throw new Error(err)
     }
+  },
+
+  async WrongQue(context, {questionId}){
+    let userInfo = window.localStorage.getItem('userInfo')
+    userInfo = userInfo && JSON.parse(userInfo)
+    const response = await wrongQue({userId: userInfo.id, questionId})
+
+    return response
   }
 }
 

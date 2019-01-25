@@ -1,24 +1,33 @@
 <template>
   <section class="wrapper">
-    <header ref="headBox" class="header-wrapper">
-      <div @click="jumpToOther({path: '/center'})" class="avatar-box">
-        <img :src="info.headPic || defaultAvatar" alt="avatar">
-      </div>
-      <!-- <img class="icon-hat" src="../assets/imgs/icon-hat.png" alt="hat"> -->
-    </header>
+      <!-- <header ref="headBox" class="header-wrapper">
+        <div @click="jumpToOther({path: '/center'})" class="avatar-box">
+          <img :src="info.headPic || defaultAvatar" alt="avatar">
+        </div>
+        <img class="icon-hat" src="../assets/imgs/icon-hat.png" alt="hat">
+      </header> -->
 
-    <van-notice-bar
+    <!-- <van-notice-bar
       @click="jumpToOther({path: '/barrage'})"
       text="温馨提示: 点击个人头像进行签到并获取您的参会信息。"
       :left-icon="msgIcon"
       class="my-notice-bar">
-    </van-notice-bar>
+    </van-notice-bar> -->
 
 
     <section class="card-list">
-      <section v-if="item.status == 0" @click="jumpToOther(item)" v-for="(item, index) in list" :key="index" class="card-item">
+      <!-- <section v-if="item.status == 0" @click="jumpToOther(item)" v-for="(item, index) in list" :key="index" class="card-item">
         <img :src="item.picture || item.url" alt="bgImg">
         <span class="card-title">{{item.name}}</span>
+      </section> -->
+
+      <section @click="jump2Other(0)" class="card-item">
+        <img :src="BarrageIcon" alt="icon">
+        <span class="card-title">弹幕</span>
+      </section>
+      <section @click="jump2Other(1)" class="card-item">
+        <img :src="VoteIcon" alt="icon">
+        <span class="card-title">投票</span>
       </section>
     </section>
 
@@ -28,12 +37,18 @@
 import {mapActions} from 'vuex'
 import axios from 'axios'
 import qs from 'qs'
+
+const BarrageIcon = require('@/assets/imgs/icon_1.png')
+const VoteIcon = require('@/assets/imgs/icon_2.png')
+
 export default {
   props: {},
   name: '',
   components: {},
   data(){
     return {
+      BarrageIcon,
+      VoteIcon,
       msgIcon: require('@/assets/imgs/icon-tip-1.png'),
       list: [],
       info: {},
@@ -101,6 +116,11 @@ export default {
       })
     },
 
+    jump2Other(type){
+      let path = type == 0 ? '/barrage' : '/vote'
+      this.$router.push(path)
+    },
+
     jumpToOther(item){
       let userInfo = window.localStorage.getItem('userInfo')
       userInfo = userInfo && JSON.parse(userInfo)
@@ -126,7 +146,7 @@ export default {
     ])
     this.handleIndexInfo().then(res => {
       this.info = res.data.info
-      this.$refs.headBox.style.backgroundImage = res.comStr && `url(${res.comStr})`
+      // this.$refs.headBox.style.backgroundImage = res.comStr && `url(${res.comStr})`
       this.list = res.data.data.map(item => {
         return  {...item, name: item.name , path: map.get(item.id)}
       })
@@ -136,10 +156,13 @@ export default {
 </script>
 <style lang="less" scoped>
 .wrapper{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
   height: 100vh;
   padding: 0.4rem;
   color: #fff;
-  background-image: url('../assets/imgs/bg_red.png');
+  background-image: url('../assets/imgs/bg_1.jpg');
   background-size: 100% 100%;
   box-sizing: border-box;
   overflow-y: scroll;
